@@ -1,0 +1,71 @@
+Now read this deeply:
+
+# Documentation Style Guide
+
+This document defines the exact standard and process for writing every `.md` file. Every future documentation file must match the defined depth, tone, structure, and quality.
+
+## Core Principles
+
+- **Single source of truth**: Each documentation file is the definitive, complete reference for its topic. No other file may duplicate its explanatory content.
+- **Zen, minimal, clean, elegant**: Use precise language. Eliminate redundancy, repetition, filler, and unnecessary words. Every sentence must add unique value.
+- **Thorough and honest**: Document every concept, flow, trigger, state transition, edge case, quirk, and implication exactly as implemented. Never oversimplify or omit important details.
+- **Professional tone**: Write for an experienced engineer or project owner who needs to understand the system deeply without reading source code.
+- **Human-readable yet technical**: Use clear prose. Avoid code snippets unless they are essential for understanding. Prefer describing behavior over showing implementation.
+
+## Required Structure
+
+Every documentation file must contain **at least four** top-level sections. Recommended top-level sections (adapt as needed for the topic):
+
+1. Introduction / Overview
+2. Core Concepts / Key Components
+3. Detailed Behavior / Processes / Flows
+4. Configuration
+5. Operational Considerations / Edge Cases
+6. Security, Reliability, and Scalability Implications
+7. Important Notes
+
+Use formatting when 
+
+## Content Requirements
+
+- Explain the **why** and **how** of every mechanism.
+- Describe all state machines, status values, and transitions with their triggers and outcomes.
+- Document configuration keys, their defaults, and the exact effect of each value.
+- Cover error handling, failure recovery, and retry logic.
+- Explicitly state what happens when features are disabled or configuration is missing.
+- Include notes on performance, concurrency, atomicity, and resource management.
+- Add a dedicated "Important Notes" section that captures non-obvious invariants and gotchas.
+- End with a closing statement declaring the file as the single source of truth for its topic.
+
+## Style Rules
+
+Use `##` for main sections and `###` for subsections, only when genuinely required.
+
+- Use backticks for exact identifiers. Status values and other small standard strings should be formatted with backticks for easy reading. Statuses like "tx_pending" should be shown as `TX Pending` for easy reading.
+
+- Never start sections with code or tables.
+- Use bold for key terms on first mention only when it improves clarity.
+
+- Write in present tense for current behavior.
+- Use active voice.
+- Keep paragraphs short (3–5 sentences maximum).
+- Use bullet lists for enumerations, never for prose.
+- Do not add "TODO", "FIXME", or speculative content.
+- Do not reference line numbers or specific function implementations unless they are part of the public API surface.
+
+## Process for Creating New Documentation
+
+1. Read the corresponding source file(s) completely and multiple times.
+2. Read all directly related files (callers, configuration, tests, etc.).
+3. Map every concept, flow, and edge case.
+4. Write the documentation following this guide exactly.
+5. Review against the source to eliminate any inaccuracy or omission.
+6. Ensure the file can stand alone as the complete reference for its topic.
+
+## Example Reference
+
+Reference documentation files demonstrate the target quality. Use them as the literal template for tone, depth, section balance, and level of detail. Every new file must reach or exceed that standard.
+
+This document itself is the single source of truth for documentation style. All future `.md` files must be written in strict accordance with the rules above.
+
+Respond with a single "{{success_string}}" if you have read and fully understood.

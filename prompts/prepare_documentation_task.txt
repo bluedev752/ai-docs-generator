@@ -1,0 +1,9 @@
+Your task is to make the file: {{md_filename}} ({{md_title}})
+
+Read any file and make any internal psychological preparations in order to do this.
+Do not write code yet. Spend true effort to prepare for perfect results fully following
+the documentation style md file instructions.
+
+All subfeatures and subconcepts need to be included and described cleanly.
+
+When you are ready, respond with a single "{{success_string}}".

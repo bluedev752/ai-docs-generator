@@ -1,0 +1,9 @@
+Now we need to review the md file that we just created, to ensure no misconceptions,
+misleadings, wrong information, misguidings are there. Double-check all contents of the
+newly created .md file and the relevant php files to ensure everything is perfect,
+professional, honest, production-ready.
+
+Improve any sections if needed. Generally try to improve aspects without sacrificing
+quality and honesty.
+
+Respond with full, perfected file content. Your response must be either the full content of the file or empty.

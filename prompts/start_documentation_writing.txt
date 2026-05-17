@@ -1,0 +1,1 @@
+Alright, do the task. Respond with full file content (without overhead) on success or with nothing (empty string) on any other case.

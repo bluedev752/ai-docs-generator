@@ -1,0 +1,5 @@
+Read the following files thoroughly and deeply to understand completely:
+
+{{relevant_files}}
+
+Respond with a single "{{success_string}}" if you have read and fully understood.

@@ -1,0 +1,33 @@
+<?php
+/**
+ * Example configuration for AI Documentation Generator
+ * Rename this file to .config.php and adjust the values below.
+ */
+
+// OpenRouter
+const OPENROUTER_API_KEY = 'sk-or-v1-YOUR_API_KEY_HERE';
+
+// Paths
+const SRC_DIR = '/path/to/your/source/project'; // Root of the project you want to document
+const OUT_DIR = '/path/to/output/directory';    // Where generated .md files will be saved
+
+// Define the Markdown files that can be generated
+const MD_FILES = [
+
+    'example-feature' => [
+
+        // Title that contains all subfeatures
+        'title' => 'Example Feature, Example Feature Subfeature, Another Subfeature',
+
+        // Source files that are relevant to this feature. Path is relative to SRC_DIR
+        'relevant_files' => [
+            'src/example-functions.php',
+            'src/example-entries.php',
+        ],
+
+        // Minimum valid generated documentation lines
+        'min_lines' => 30,
+
+    ],
+
+];
