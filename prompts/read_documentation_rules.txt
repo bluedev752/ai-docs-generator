@@ -1,198 +1,108 @@
-Now read and internalize the following documentation standard completely.
+Now read this deeply:
 
-# Documentation Philosophy
+# Documentation Style Guide
 
-Documentation exists to transfer deep operational understanding from the implementation into the mind of the reader.
+This document defines the exact standard and process for writing every `.md` file. Every future documentation file must match the defined depth, tone, structure, clarity, and quality.
 
-The goal is not to describe files or code mechanically.
+## Core Principles
 
-The goal is to teach:
-- how the system works,
-- why it works that way,
-- how components interact,
-- what assumptions exist,
-- what behavior emerges from the implementation,
-- and what consequences changes would have.
+- **Single source of truth**: Each documentation file is the definitive, complete reference for its topic. No other file may duplicate its explanatory content.
 
-The reader should finish the document with a strong mental model of the system and be able to reason about behavior without opening source files.
+- **Zen, minimal, clean, elegant**: Use precise language. Eliminate redundancy, repetition, filler, and unnecessary words. Every sentence must add unique value.
 
-Documentation must feel like it was written by an engineer who deeply understands both the implementation and the operational realities of the system.
+- **Thorough and honest**: Document every concept, flow, trigger, state transition, edge case, quirk, invariant, and implication exactly as implemented. Never oversimplify or omit important details.
 
-# Core Principles
+- **Professional tone**: Write for an experienced engineer or project owner who needs to understand the system deeply without reading source code.
 
-## Single Source of Truth
+- **Human-readable yet technical**: Use clear prose. Avoid code snippets unless essential for understanding. Prefer explaining behavior, intent, and system relationships over reproducing implementation details.
 
-Each document is the definitive reference for its topic.
-Do not duplicate explanatory content across files.
+- **Explain systems, not just files**: Documentation must explain how components influence one another, why certain flows exist, what assumptions are relied upon, and how changes propagate through the system.
 
-## Explain Meaning, Not Just Mechanics
+- **Teach the reader the mental model**: The goal is not only to describe what the code does, but to transfer deep operational understanding to the reader.
 
-Do not merely describe steps or functions.
+## Required Structure
 
-Explain:
-- intent,
-- consequences,
-- relationships,
-- tradeoffs,
-- guarantees,
-- risks,
-- and operational significance.
+Every documentation file must contain at least four top-level sections.
 
-Every major mechanism must answer:
-- What does this actually accomplish?
-- Why does the system need this?
-- What problem does it prevent?
-- What would happen if it behaved differently?
-- How does it affect surrounding systems?
+Recommended top-level sections (adapt as needed for the topic):
 
-## Systems Thinking First
+1. Introduction / Overview
+2. Core Concepts / Key Components
+3. Detailed Behavior / Processes / Flows
+4. Configuration
+5. Operational Considerations / Edge Cases
+6. Security, Reliability, and Scalability Implications
+7. Important Notes
 
-Always document systems as interacting behaviors rather than isolated code sections.
+The structure should feel natural and balanced. Sections should evolve from high-level understanding into progressively deeper operational detail.
 
-Explain:
-- data flow,
-- control flow,
-- lifecycle flow,
-- dependency relationships,
-- state propagation,
-- synchronization,
-- and cascading effects.
+## Content Requirements
 
-## Reader-Oriented Technical Writing
+- Explain both the **how** and the **why** of every important mechanism.
+- Explain how components interact with and affect one another.
+- Clarify the intent behind architectural decisions when inferable from implementation.
+- Describe all state machines, status values, and transitions with their triggers and outcomes.
+- Document configuration keys, defaults, fallbacks, and the exact behavioral effect of each value.
+- Cover error handling, failure recovery, retries, fallback behavior, and degraded operation modes.
+- Explicitly describe behavior when features are disabled, partially configured, unavailable, or misconfigured.
+- Include operational implications, performance considerations, concurrency concerns, atomicity guarantees, and resource management behavior where relevant.
+- Document lifecycle behavior, initialization flows, cleanup behavior, caching behavior, synchronization behavior, and persistence implications where applicable.
+- Explain not only what happens, but what that means for operators, developers, integrators, or maintainers.
+- Include a dedicated "Important Notes" section capturing non-obvious invariants, gotchas, assumptions, and implementation-sensitive behavior.
+- Surface hidden coupling and implicit dependencies whenever they materially affect behavior.
+- End with a closing statement declaring the file as the single source of truth for its topic.
 
-Assume the reader is intelligent and technical but unfamiliar with the implementation.
+## Depth Expectations
 
-Optimize for:
-- comprehension,
-- clarity,
-- operational understanding,
-- and long-term maintainability knowledge.
+The documentation must go beyond surface-level narration.
 
-Avoid implementation narration.
+Do not merely describe the order of operations. Explain:
+- why the order matters,
+- what assumptions exist between steps,
+- what guarantees are established,
+- what side effects occur,
+- and how failures or state changes propagate through the system.
 
-Instead of:
-"This method checks if X exists."
+The reader should come away understanding:
+- how the system behaves,
+- why it behaves that way,
+- how different parts influence one another,
+- and what consequences emerge from changing behavior or configuration.
 
-Prefer:
-"This validation prevents the system from entering an unrecoverable state where downstream processing would operate on incomplete transactional context."
+Avoid "read-and-report" style documentation.
 
-## Honest and Precise
+Instead, produce documentation that demonstrates genuine comprehension of the system.
 
-Never exaggerate correctness, safety, or guarantees.
+## Style Rules
 
-Document:
-- limitations,
-- edge cases,
-- failure behavior,
-- implicit assumptions,
-- and fragile areas honestly.
+Use `##` for main sections and `###` for subsections only when genuinely required.
 
-## Explain Dynamic Behavior
+- Use backticks for exact identifiers.
+- Status values and standardized strings should be formatted for readability. For example, `TX Pending` instead of `"tx_pending"` when appropriate.
+- Never start sections with code or tables.
+- Use bold for key terms only when it meaningfully improves clarity.
+- Prefer dense, high-value prose over fragmented micro-paragraphs.
+- Write in present tense.
+- Use active voice.
+- Use bullet lists for enumerations, never for primary explanatory prose.
+- Avoid vague wording such as "basically", "simply", "just", or "somehow".
+- Do not add "TODO", "FIXME", speculation, assumptions without basis, or hypothetical behavior not grounded in implementation.
+- Do not reference line numbers or internal function locations unless part of the public API surface.
 
-Static descriptions are insufficient.
+## Process for Creating New Documentation
 
-Focus heavily on:
-- runtime behavior,
-- transitions,
-- reactions,
-- retries,
-- recovery,
-- sequencing,
-- timing,
-- and coordination.
+1. Read the corresponding source file(s) completely and multiple times.
+2. Read all directly related files including callers, consumers, configuration, tests, integrations, and state definitions.
+3. Build a complete mental model of the feature and its operational behavior.
+4. Map every concept, interaction, dependency, edge case, and failure path.
+5. Write the documentation following this guide exactly.
+6. Review against the source to eliminate inaccuracies, omissions, shallow explanations, or misleading simplifications.
+7. Ensure the document can stand entirely on its own as the authoritative reference for the topic.
+8. Ensure the document does not go into detail about stuff that is off-topic and not its responsibility.
 
-# Required Content Depth
 
-Every document must thoroughly explain:
+Every new file must reach or exceed that standard.
 
-- Architectural purpose
-- Core concepts and mental models
-- Component responsibilities
-- State machines and transitions
-- Runtime lifecycle behavior
-- Configuration effects
-- Failure and recovery behavior
-- Concurrency and synchronization implications
-- Performance characteristics
-- Scalability implications
-- Resource management
-- Operational risks
-- Non-obvious invariants
-- Cross-component interactions
-- Edge cases and degraded behavior
-- Important implementation quirks
-- Safety guarantees and limitations
+This document itself is the single source of truth for documentation style. All future `.md` files must strictly follow the rules above.
 
-# Writing Style
-
-## Tone
-
-Write like a senior systems engineer explaining a production system to another senior engineer.
-
-Professional, calm, precise, deeply informed.
-
-## Structure
-
-Use:
-- `##` for primary sections
-- `###` only when genuinely necessary
-
-Prefer flowing prose over fragmented bullets unless enumeration improves clarity.
-
-## Language
-
-Use direct and precise language.
-
-Avoid:
-- filler,
-- repetition,
-- generic explanations,
-- marketing tone,
-- and low-information statements.
-
-Every paragraph must contribute meaningful understanding.
-
-## Technical Depth
-
-Always prioritize:
-1. understanding,
-2. causality,
-3. operational implications,
-4. architectural reasoning.
-
-Over:
-- implementation trivia,
-- syntax explanation,
-- or file-by-file reporting.
-
-## Formatting
-
-Use backticks for:
-- identifiers,
-- statuses,
-- config keys,
-- protocol values,
-- exact runtime states.
-
-Humanize machine-oriented values when useful.
-
-Example:
-`TX_PENDING` should be explained as “Transaction Pending”.
-
-# Documentation Quality Standard
-
-A high-quality document should allow a future engineer to:
-- safely modify the system,
-- reason about runtime behavior,
-- predict side effects,
-- diagnose production issues,
-- understand architectural intent,
-- and identify operational risks,
-
-without needing to reverse-engineer the implementation again.
-
-This document is the definitive standard for all generated documentation.
-
-Respond only with:
-
-{{success_string}}
+Respond with a single "{{success_string}}" if you have read and fully understood.

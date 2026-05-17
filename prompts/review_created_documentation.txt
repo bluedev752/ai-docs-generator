@@ -1,40 +1,29 @@
-Perform a hostile senior-engineer review of the generated documentation.
+Now perform a deep verification and refinement pass on the newly created `.md` file.
 
-Assume the document will be used during:
-- production incidents,
-- onboarding of senior engineers,
-- architectural refactors,
-- debugging of edge cases,
-- and long-term maintenance.
+Re-read the relevant source files and validate every important statement, implication, flow, assumption, and behavioral description.
 
-Your task is to identify and correct:
+Your goals are to eliminate:
+- inaccuracies,
 - shallow explanations,
 - misleading simplifications,
-- missing operational implications,
-- weak mental models,
-- implementation narration,
-- unstated assumptions,
-- hidden edge cases,
-- inaccurate causal explanations,
-- missing lifecycle details,
-- vague terminology,
-- redundancy,
-- and sections that fail to teach the reader how the system actually behaves.
+- ambiguous wording,
+- architectural misunderstandings,
+- missing edge cases,
+- incomplete operational reasoning,
+- and weak conceptual explanations.
 
-You must aggressively improve:
-- explanatory depth,
-- clarity,
-- systems reasoning,
-- operational usefulness,
-- architectural insight,
-- and reader comprehension.
+Improve the document where necessary by:
+- increasing clarity,
+- strengthening causal explanations,
+- improving flow explanations,
+- clarifying component relationships,
+- refining precision,
+- and increasing reader usefulness.
 
-Ensure the document explains:
-- why behaviors exist,
-- what consequences they create,
-- what risks they mitigate,
-- and how surrounding systems are affected.
+Do not add filler, verbosity, speculation, or unnecessary repetition.
 
-The final result must feel authoritative, deeply informed, and production-grade.
+The final document should feel production-grade, authoritative, deeply informed, and highly useful to experienced engineers and maintainers.
 
-Output ONLY the final corrected markdown document.
+Respond with the complete perfected file content only.
+
+If perfection cannot be achieved, respond with an empty string.

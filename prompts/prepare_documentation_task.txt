@@ -1,30 +1,25 @@
-Your task is to create:
+Your task is to create the file:
 
-{{md_filename}} — {{md_title}}
+{{md_filename}} ({{md_title}})
 
-Before writing, perform deep internal preparation.
+Before writing, fully internalize:
+- the system architecture,
+- feature intent,
+- operational behavior,
+- interactions between components,
+- lifecycle behavior,
+- and all important invariants.
 
-You must:
-- synthesize the architecture mentally,
-- identify the most important concepts,
-- determine the critical runtime behaviors,
-- identify operationally dangerous areas,
-- map all state transitions,
-- infer architectural intent,
-- and determine what knowledge is essential for future maintainers.
+Think carefully about:
+- what a future engineer would need in order to confidently modify this system,
+- what hidden assumptions exist,
+- what relationships between components are easy to miss,
+- and what operational consequences emerge from configuration or state changes.
 
-The final document must not read like generated documentation.
+Do not write the file yet.
 
-It must read like a deeply informed technical design and operational reference written by an engineer who fully understands:
-- the implementation,
-- the runtime behavior,
-- the operational consequences,
-- and the architectural philosophy behind the system.
+Spend substantial effort preparing for highly accurate, deeply useful, professional documentation fully aligned with the documentation style guide.
 
-The document must teach the reader how to think about the system.
+All subfeatures, subflows, edge cases, operational implications, and subconcepts must be included and explained clearly.
 
-Do not write the document yet.
-
-Once fully prepared, respond only with:
-
-{{success_string}}
+When you are fully prepared, respond with a single "{{success_string}}".
