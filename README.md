@@ -1,4 +1,4 @@
-# coremd-ai
+# AI Docs Generator
 
 PHP CLI tool for generating documentation with AI.
 
@@ -14,8 +14,8 @@ Reads source files and produces Markdown via OpenRouter models. Enforces single 
 ## Installation
 
 ```bash
-git clone https://github.com/bluedev752/coremd-ai
-cd coremd-ai
+git clone https://github.com/bluedev752/ai-docs-generator
+cd ai-docs-generator
 ```
 
 ## Configuration

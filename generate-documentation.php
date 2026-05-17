@@ -3,7 +3,7 @@
 
 require __DIR__ . '/load.php';
 
-echo color("=== AI Documentation Generator ===", 'bold') . "\n\n";
+echo color("=== AI Docs Generator ===", 'bold') . "\n\n";
 
 // Step 1: Fetch and select model
 echo info("Fetching available free models...") . "\n";

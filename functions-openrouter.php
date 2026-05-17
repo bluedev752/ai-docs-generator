@@ -48,7 +48,7 @@ function openrouter_request(string $endpoint, array $payload = [], string $metho
             'Authorization: Bearer ' . OPENROUTER_API_KEY,
             'Content-Type: application/json',
             'HTTP-Referer: https://localhost',
-            'X-Title: Docs Generator',
+            'X-Title: AI Docs Generator',
         ],
     ];
     if (strtoupper($method) === 'POST') {
