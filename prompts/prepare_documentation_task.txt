@@ -1,9 +1,30 @@
-Your task is to make the file: {{md_filename}} ({{md_title}})
+Your task is to create:
 
-Read any file and make any internal psychological preparations in order to do this.
-Do not write code yet. Spend true effort to prepare for perfect results fully following
-the documentation style md file instructions.
+{{md_filename}} — {{md_title}}
 
-All subfeatures and subconcepts need to be included and described cleanly.
+Before writing, perform deep internal preparation.
 
-When you are ready, respond with a single "{{success_string}}".
+You must:
+- synthesize the architecture mentally,
+- identify the most important concepts,
+- determine the critical runtime behaviors,
+- identify operationally dangerous areas,
+- map all state transitions,
+- infer architectural intent,
+- and determine what knowledge is essential for future maintainers.
+
+The final document must not read like generated documentation.
+
+It must read like a deeply informed technical design and operational reference written by an engineer who fully understands:
+- the implementation,
+- the runtime behavior,
+- the operational consequences,
+- and the architectural philosophy behind the system.
+
+The document must teach the reader how to think about the system.
+
+Do not write the document yet.
+
+Once fully prepared, respond only with:
+
+{{success_string}}

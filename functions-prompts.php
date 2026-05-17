@@ -1,9 +1,13 @@
 <?php
 
 function ai_read_relevant_files(string $mdFilename, string $model): ?string {
+    $common_relevant_files = defined('COMMON_RELEVANT_FILES') ? COMMON_RELEVANT_FILES : [];
+    $specific_relevant_files = MD_FILES[$mdFilename]['relevant_files'] ?? [];
     $prompt = str_replace(
         '{{relevant_files}}',
-        build_prompt_include_files_content(MD_FILES[$mdFilename]['relevant_files'] ?? []),
+        build_prompt_include_files_content(
+            array_merge($common_relevant_files ?: [], $specific_relevant_files ?: [])
+        ),
         get_prompt('read_relevant_files', $mdFilename)
     );
     $response = ai_run_prompt($prompt, 'read_relevant_files', $model);
@@ -36,6 +40,16 @@ function ai_review_created_documentation(string $mdFilename, string $model): ?st
 
 function ai_start_conversation(): void {
     $GLOBALS['ai_messages'] = [];
+}
+
+function ai_rollback_last_turn(): void {
+    $messages = &$GLOBALS['ai_messages'];
+    if (!empty($messages) && end($messages)['role'] === 'assistant') {
+        array_pop($messages);
+    }
+    if (!empty($messages) && end($messages)['role'] === 'user') {
+        array_pop($messages);
+    }
 }
 
 function ai_run_prompt(string $prompt, string $prompt_key, string $model): ?string {

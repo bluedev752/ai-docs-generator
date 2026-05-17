@@ -1,9 +1,40 @@
-Now we need to review the md file that we just created, to ensure no misconceptions,
-misleadings, wrong information, misguidings are there. Double-check all contents of the
-newly created .md file and the relevant php files to ensure everything is perfect,
-professional, honest, production-ready.
+Perform a hostile senior-engineer review of the generated documentation.
 
-Improve any sections if needed. Generally try to improve aspects without sacrificing
-quality and honesty.
+Assume the document will be used during:
+- production incidents,
+- onboarding of senior engineers,
+- architectural refactors,
+- debugging of edge cases,
+- and long-term maintenance.
 
-Respond with full, perfected file content. Your response must be either the full content of the file or empty.
+Your task is to identify and correct:
+- shallow explanations,
+- misleading simplifications,
+- missing operational implications,
+- weak mental models,
+- implementation narration,
+- unstated assumptions,
+- hidden edge cases,
+- inaccurate causal explanations,
+- missing lifecycle details,
+- vague terminology,
+- redundancy,
+- and sections that fail to teach the reader how the system actually behaves.
+
+You must aggressively improve:
+- explanatory depth,
+- clarity,
+- systems reasoning,
+- operational usefulness,
+- architectural insight,
+- and reader comprehension.
+
+Ensure the document explains:
+- why behaviors exist,
+- what consequences they create,
+- what risks they mitigate,
+- and how surrounding systems are affected.
+
+The final result must feel authoritative, deeply informed, and production-grade.
+
+Output ONLY the final corrected markdown document.

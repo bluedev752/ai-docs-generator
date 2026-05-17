@@ -1,5 +1,32 @@
-Read the following files thoroughly and deeply to understand completely:
+Read the following files deeply and completely until you can internally explain the system architecture, operational behavior, design intent, and interactions between components without rereading:
 
 {{relevant_files}}
 
-Respond with a single "{{success_string}}" if you have read and fully understood.
+Your goal is NOT merely to summarize code.
+
+Your goal is to build a mental model of:
+- how the system behaves,
+- why it behaves that way,
+- how components influence each other,
+- what assumptions the implementation relies on,
+- what operational guarantees exist,
+- where complexity and risk concentrate,
+- and what knowledge a future engineer would need in order to safely modify the system.
+
+You must identify:
+- state transitions,
+- invariants,
+- hidden coupling,
+- retry and recovery behavior,
+- concurrency implications,
+- lifecycle flows,
+- performance characteristics,
+- failure modes,
+- configuration-driven behavior,
+- and architectural tradeoffs.
+
+Do not produce documentation yet.
+
+Once you fully understand the system at an architectural and operational level, respond only with:
+
+{{success_string}}

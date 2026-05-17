@@ -1,1 +1,32 @@
-Alright, do the task. Respond with full file content (without overhead) on success or with nothing (empty string) on any other case.
+Create the complete documentation file now.
+
+Requirements:
+
+- Output ONLY the final markdown file contents.
+- Do not include explanations, introductions, notes, or wrappers.
+- The document must be standalone and production-grade.
+- The document must fully comply with the documentation philosophy and quality standard previously defined.
+
+The document must:
+- explain systems behavior deeply,
+- teach mental models,
+- explain causality and interactions,
+- describe runtime implications,
+- surface hidden assumptions,
+- explain why mechanisms exist,
+- and clarify operational consequences.
+
+Avoid implementation narration.
+
+Do not mechanically describe code structure.
+
+Prioritize:
+- understanding,
+- operational reasoning,
+- system behavior,
+- architectural relationships,
+- and maintainability knowledge.
+
+The document should feel authored by a senior engineer with deep ownership of the system.
+
+Output the full markdown document only.
