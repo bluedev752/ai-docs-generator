@@ -63,11 +63,11 @@ echo success("Selected: $mdFilename") . "\n";
 ai_start_conversation();
 
 $steps = [
-    'Reading relevant source files'      => 'ai_read_relevant_files',
-    'Reading documentation rules'        => 'ai_read_documentation_rules',
-    'Preparing documentation task'       => 'ai_prepare_documentation_task',
-    'Writing initial documentation'      => 'ai_start_documentation_writing',
-    'Reviewing and finalizing'           => 'ai_review_created_documentation',
+    'Reading relevant source files' => 'ai_read_relevant_files',
+    'Reading documentation rules'   => 'ai_read_documentation_rules',
+    'Preparing documentation task'  => 'ai_prepare_documentation_task',
+    'Writing initial documentation' => 'ai_start_documentation_writing',
+    'Reviewing and finalizing'      => 'ai_review_created_documentation',
 ];
 
 $results = [];
@@ -85,7 +85,7 @@ foreach ($steps as $label => $function) {
             $response = $function($mdFilename, $model);
 
             if ($response !== null && $response !== '') {
-                $results[$label] = $response;
+                $results[$function] = $response;
                 echo success("✓ Completed successfully.") . "\n";
                 $success = true;
             } else {
@@ -110,7 +110,7 @@ foreach ($steps as $label => $function) {
 }
 
 // Step 4: Save final documentation
-$finalContent = $results['review_created_documentation'] ?? $results['start_documentation_writing'] ?? null;
+$finalContent = $results['ai_review_created_documentation'] ?? $results['ai_start_documentation_writing'] ?? null;
 
 if ($finalContent === null || strlen($finalContent) < 100) {
     die("Error: Final documentation content is too short or missing.\n");
