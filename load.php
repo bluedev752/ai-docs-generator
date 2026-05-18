@@ -33,6 +33,7 @@ function validate_config(): void {
         'OUT_DIR' => 'string',
         'MD_FILES' => 'array',
         'COMMON_RELEVANT_FILES' => 'array',
+        'USE_FREE_MODELS_ONLY' => 'bool',
     ];
 
     foreach ($required as $const => $data_type) {

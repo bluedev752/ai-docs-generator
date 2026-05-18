@@ -7,6 +7,9 @@
 // OpenRouter
 const OPENROUTER_API_KEY = 'sk-or-v1-YOUR_API_KEY_HERE';
 
+// Model selection
+const USE_FREE_MODELS_ONLY = true; // Set to false to allow all models (including paid)
+
 // Paths
 const SRC_DIR = '/path/to/your/source/project'; // Root of the project you want to document
 const OUT_DIR = '/path/to/output/directory';    // Where generated .md files will be saved

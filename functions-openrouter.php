@@ -57,6 +57,15 @@ function openrouter_free_models(): array {
     return $free;
 }
 
+function openrouter_all_models(): array {
+    $data = openrouter_request('/v1/models', [], 'GET');
+    $models = [];
+    foreach ($data['data'] ?? [] as $model) {
+        $models[] = $model['id'];
+    }
+    return $models;
+}
+
 function openrouter_request(string $endpoint, array $payload = [], string $method = 'POST'): array {
     $url = OPENROUTER_BASE_URL . $endpoint;
     $ch = curl_init($url);

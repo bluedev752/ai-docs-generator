@@ -6,7 +6,7 @@ Reads source files and produces Markdown via OpenRouter models. Enforces single 
 
 ## Features
 
-- Free model selection from OpenRouter
+- Optional free-only model selection from OpenRouter (configurable)
 - Multi-step AI pipeline with retries: read files, rules, prepare, write, review
 - Config-driven targets with min line validation
 - Strict style enforcement via modular prompts

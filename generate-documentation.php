@@ -6,19 +6,26 @@ require __DIR__ . '/load.php';
 echo color("======= AI Docs Generator =======", 'bold') . "\n\n";
 
 function select_model(): string {
-    echo info("Fetching available free models...") . "\n";
-    $freeModels = openrouter_free_models();
+    $useFreeOnly = defined('USE_FREE_MODELS_ONLY') && USE_FREE_MODELS_ONLY;
 
-    if (isset($freeModels['error'])) {
-        die("Error fetching free models list: {$freeModels['error']}\n");
+    if ($useFreeOnly) {
+        echo info("Fetching available free models...") . "\n";
+        $models = openrouter_free_models();
+    } else {
+        echo info("Fetching all available models...") . "\n";
+        $models = openrouter_all_models();
     }
 
-    if (empty($freeModels)) {
-        die("Error: No free models available from OpenRouter.\n");
+    if (isset($models['error'])) {
+        die("Error fetching models: {$models['error']}\n");
+    }
+
+    if (empty($models)) {
+        die("Error: No models available.\n");
     }
 
     echo "\n" . color("Available models:", 'bold') . "\n";
-    foreach ($freeModels as $i => $m) {
+    foreach ($models as $i => $m) {
         printf("  %d. %s\n", $i + 1, $m);
     }
 
@@ -28,8 +35,8 @@ function select_model(): string {
         $input = trim(fgets(STDIN));
         $idx = (int)$input - 1;
 
-        if (isset($freeModels[$idx])) {
-            $model = $freeModels[$idx];
+        if (isset($models[$idx])) {
+            $model = $models[$idx];
         } else {
             echo "Invalid selection. Please try again.\n";
         }
