@@ -57,8 +57,25 @@ function validate_config(): void {
         die("Configuration error: OUT_DIR is not writable: " . OUT_DIR . "\n");
     }
 
+    // HISTORY_FILE
+    $historyDir = dirname(HISTORY_FILE);
+    if (!is_dir($historyDir) && !@mkdir($historyDir, 0777, true)) {
+        die("Configuration error: Could not create directory for HISTORY_FILE: $historyDir\n");
+    }
+    if (!is_writable($historyDir)) {
+        die("Configuration error: HISTORY_FILE directory is not writable: $historyDir\n");
+    }
+
     if (!is_array(COMMON_RELEVANT_FILES)) {
         die("Configuration error: COMMON_RELEVANT_FILES must be an array.\n");
+    }
+
+    // Validate COMMON_RELEVANT_FILES paths
+    foreach (COMMON_RELEVANT_FILES as $file) {
+        $full = SRC_DIR . DIRECTORY_SEPARATOR . ltrim($file, '\\/');
+        if (!file_exists($full)) {
+            die("Configuration error: COMMON_RELEVANT_FILES file does not exist: $file\n");
+        }
     }
 
     if (!is_array(MD_FILES) || empty(MD_FILES)) {
@@ -74,6 +91,14 @@ function validate_config(): void {
         }
         if (!isset($config['relevant_files']) || !is_array($config['relevant_files'])) {
             die("Configuration error: MD_FILES['$filename'] must have 'relevant_files' as an array.\n");
+        }
+
+        // Validate relevant_files paths
+        foreach ($config['relevant_files'] as $file) {
+            $full = SRC_DIR . DIRECTORY_SEPARATOR . ltrim($file, '\\/');
+            if (!file_exists($full)) {
+                die("Configuration error: MD_FILES['$filename']['relevant_files'] file does not exist: $file\n");
+            }
         }
         if (isset($config['min_lines']) && (!is_int($config['min_lines']) || $config['min_lines'] < 0)) {
             die("Configuration error: MD_FILES['$filename']['min_lines'] must be a non-negative integer.\n");
