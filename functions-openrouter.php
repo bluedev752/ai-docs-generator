@@ -73,7 +73,7 @@ function openrouter_request(string $endpoint, array $payload = [], string $metho
     ];
     if (strtoupper($method) === 'POST') {
         $json = json_encode($payload);
-        echo "OpenRouter request length: " . strlen($json) . " bytes\n";
+        echo dim("Request size: " . intval(strlen($json) / 1024) . " KB\n");
         $options[CURLOPT_POST] = true;
         $options[CURLOPT_POSTFIELDS] = $json;
     }
@@ -94,6 +94,8 @@ function openrouter_request(string $endpoint, array $payload = [], string $metho
             $rawResponse
         );
     }
+
+    echo dim("Response size: " . intval(strlen($rawResponse) / 1024) . " KB\n");
 
     $result = json_decode($rawResponse, true);
     if (!is_array($result)) {
