@@ -79,7 +79,7 @@ function get_prompt(string $prompt_key, string $mdFilename): string {
     // Replace md title
     $prompt = str_replace('{{md_title}}', MD_FILES[$mdFilename]['title'], $prompt);
     // Replace exclude_concepts if present
-    $prompt = str_replace('{{exclude_concepts}}', MD_FILES[$mdFilename]['exclude_concepts'] ?? '(none)', $prompt);
+    $prompt = str_replace('{{exclude_concepts}}', MD_FILES[$mdFilename]['exclude_concepts'] ?? '(none specified)', $prompt);
     return $prompt;
 }
 
