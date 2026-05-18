@@ -6,8 +6,6 @@
 
 // OpenRouter
 const OPENROUTER_API_KEY = 'sk-or-v1-YOUR_API_KEY_HERE';
-
-// Model selection
 const USE_FREE_MODELS_ONLY = true; // Set to false to allow all models (including paid)
 
 // Paths
