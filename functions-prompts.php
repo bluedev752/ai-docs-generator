@@ -1,7 +1,7 @@
 <?php
 
 function ai_read_relevant_files(string $mdFilename, string $model): string {
-    $common_relevant_files = defined('COMMON_RELEVANT_FILES') ? COMMON_RELEVANT_FILES : [];
+    $common_relevant_files = COMMON_RELEVANT_FILES;
     $specific_relevant_files = MD_FILES[$mdFilename]['relevant_files'] ?? [];
     $prompt = str_replace(
         '{{relevant_files}}',

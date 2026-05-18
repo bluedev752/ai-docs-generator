@@ -2,10 +2,7 @@
 
 // Internal config
 
-const OPENROUTER_BASE_URL   = 'https://openrouter.ai/api';
-
-const PROMPT_SUCCESS_STRING = '✨';
-
+const OPENROUTER_BASE_URL = 'https://openrouter.ai/api';
 const PROMPT_STEPS = [
     // Function                       // Action label
     'ai_read_relevant_files'          => 'Reading relevant source files',
@@ -14,15 +11,17 @@ const PROMPT_STEPS = [
     'ai_start_documentation_writing'  => 'Writing initial documentation',
     'ai_review_created_documentation' => 'Reviewing and finalizing',
 ];
-
+const PROMPT_SUCCESS_STRING = '✨';
 const HISTORY_FILE = __DIR__ . '/.history.json';
 
 // Load core components
-
-require_once __DIR__ . '/.config.php';
 require_once __DIR__ . '/functions-prompts.php';
 require_once __DIR__ . '/functions-openrouter.php';
 require_once __DIR__ . '/functions-history.php';
+
+// Load config
+
+require_once __DIR__ . '/.config.php';
 
 // Config Validation
 
@@ -32,25 +31,37 @@ function validate_config(): void {
         'SRC_DIR' => 'string',
         'OUT_DIR' => 'string',
         'MD_FILES' => 'array',
-        'COMMON_RELEVANT_FILES' => 'array',
-        'USE_FREE_MODELS_ONLY' => 'bool',
     ];
-
+    $optional = [
+        'COMMON_RELEVANT_FILES' => 'array', // defaults to empty array
+        'USE_FREE_MODELS_ONLY' => 'bool', // defaults to null
+        'SOCKS5_PROXY' => 'string', // defaults to empty string
+    ];
     foreach ($required as $const => $data_type) {
         if (!defined($const)) {
             die("Configuration error: Constant '$const' is not defined as $data_type in .config.php\n");
         }
     }
+    // Define all optional constants
+    foreach ($optional as $const => $data_type) {
+        if (!defined($const)) {
+            define($const, match($data_type) {
+                'array' => [],
+                'string' => '',
+                default => null
+            });
+        }
+    }
 
-    if (empty(OPENROUTER_API_KEY) || !str_starts_with(OPENROUTER_API_KEY, 'sk-or-')) {
+    if (!is_string(OPENROUTER_API_KEY) || !str_starts_with(OPENROUTER_API_KEY, 'sk-or-')) {
         die("Configuration error: OPENROUTER_API_KEY is missing or invalid.\n");
     }
 
-    if (!is_dir(SRC_DIR)) {
+    if (!is_string(SRC_DIR) || !is_dir(SRC_DIR)) {
         die("Configuration error: SRC_DIR does not exist: " . SRC_DIR . "\n");
     }
 
-    if (!is_dir(OUT_DIR) && !@mkdir(OUT_DIR, 0777, true)) {
+    if (!is_string(OUT_DIR) || !is_dir(OUT_DIR) && !@mkdir(OUT_DIR, 0777, true)) {
         die("Configuration error: Could not create OUT_DIR: " . OUT_DIR . "\n");
     }
 
@@ -106,6 +117,12 @@ function validate_config(): void {
         }
         if (isset($config['exclude_concepts']) && !is_string($config['exclude_concepts'])) {
             die("Configuration error: MD_FILES['$filename']['exclude_concepts'] must be a string.\n");
+        }
+    }
+    // SOCKS5_PROXY validation (optional)
+    if (!is_string(SOCKS5_PROXY) || SOCKS5_PROXY !== '') {
+        if (!preg_match('/^[\d\.:]+$/', SOCKS5_PROXY)) {
+            die("Configuration error: Optional SOCKS5_PROXY must be in format 'ip:port' (e.g. 127.0.0.1:9050).\n");
         }
     }
 }

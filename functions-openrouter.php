@@ -80,6 +80,13 @@ function openrouter_request(string $endpoint, array $payload = [], string $metho
             'X-Title: AI Docs Generator',
         ],
     ];
+
+    // Optional SOCKS5 proxy
+    if (SOCKS5_PROXY) {
+        $options[CURLOPT_PROXY] = SOCKS5_PROXY;
+        $options[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
+    }
+
     if (strtoupper($method) === 'POST') {
         $json = json_encode($payload);
         echo dim("Request size: " . intval(strlen($json) / 1024) . " KB\n");

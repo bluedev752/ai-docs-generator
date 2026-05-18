@@ -6,9 +6,8 @@ require __DIR__ . '/load.php';
 echo color("======= AI Docs Generator =======", 'bold') . "\n\n";
 
 function select_model(): string {
-    $useFreeOnly = defined('USE_FREE_MODELS_ONLY') && USE_FREE_MODELS_ONLY;
 
-    if ($useFreeOnly) {
+    if (USE_FREE_MODELS_ONLY) {
         echo info("Fetching available free models...") . "\n";
         $models = openrouter_free_models();
     } else {
