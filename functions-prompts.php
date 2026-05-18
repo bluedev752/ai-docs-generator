@@ -75,13 +75,11 @@ function get_prompt(string $prompt_key, string $mdFilename): string {
     // Replace success key
     $prompt = str_replace('{{success_string}}', PROMPT_SUCCESS_STRING, $prompt);
     // Replace md filename
-    if ($mdFilename) {
-        $prompt = str_replace('{{md_filename}}', $mdFilename, $prompt);
-        // Replace md title
-        if (isset(MD_FILES[$mdFilename]['title'])) {
-            $prompt = str_replace('{{md_title}}', MD_FILES[$mdFilename]['title'], $prompt);
-        }
-    }
+    $prompt = str_replace('{{md_filename}}', $mdFilename, $prompt);
+    // Replace md title
+    $prompt = str_replace('{{md_title}}', MD_FILES[$mdFilename]['title'], $prompt);
+    // Replace exclude_concepts if present
+    $prompt = str_replace('{{exclude_concepts}}', MD_FILES[$mdFilename]['exclude_concepts'] ?? '(none)', $prompt);
     return $prompt;
 }
 

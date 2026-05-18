@@ -11,22 +11,32 @@ const OPENROUTER_API_KEY = 'sk-or-v1-YOUR_API_KEY_HERE';
 const SRC_DIR = '/path/to/your/source/project'; // Root of the project you want to document
 const OUT_DIR = '/path/to/output/directory';    // Where generated .md files will be saved
 
+// Optional: Files that are relevant to all documentation targets
+// Note: These are excluded from hash calculation
+const COMMON_RELEVANT_FILES = [
+    'src/core.php',
+    'src/helpers.php',
+];
+
 // Define the Markdown files that can be generated
 const MD_FILES = [
 
     'example-feature' => [
 
-        // Title that contains all subfeatures
-        'title' => 'Example Feature, Example Feature Subfeature, Another Subfeature',
+        // Title that contains all features to be documented
+        'title' => 'Example Feature, Another Feature, Some Subfeature',
 
-        // Source files that are relevant to this feature. Path is relative to SRC_DIR
+        // Source files that are relevant to this feature (relative to SRC_DIR)
         'relevant_files' => [
             'src/example-functions.php',
             'src/example-entries.php',
         ],
 
-        // Minimum valid generated documentation lines
-        'min_lines' => 30,
+        // Optional: Concepts that should NOT be documented for this target
+        // 'exclude_concepts' => 'Internal helpers, legacy fallback logic',
+
+        // Optional: Minimum number of lines required in the generated documentation
+        'min_lines' => 50,
 
     ],
 

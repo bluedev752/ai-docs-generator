@@ -15,11 +15,14 @@ const PROMPT_STEPS = [
     'ai_review_created_documentation' => 'Reviewing and finalizing',
 ];
 
+const HISTORY_FILE = __DIR__ . '/.history.json';
+
 // Load core components
 
 require_once __DIR__ . '/.config.php';
 require_once __DIR__ . '/functions-prompts.php';
 require_once __DIR__ . '/functions-openrouter.php';
+require_once __DIR__ . '/functions-history.php';
 
 // Config Validation
 
@@ -74,6 +77,9 @@ function validate_config(): void {
         }
         if (isset($config['min_lines']) && (!is_int($config['min_lines']) || $config['min_lines'] < 0)) {
             die("Configuration error: MD_FILES['$filename']['min_lines'] must be a non-negative integer.\n");
+        }
+        if (isset($config['exclude_concepts']) && !is_string($config['exclude_concepts'])) {
+            die("Configuration error: MD_FILES['$filename']['exclude_concepts'] must be a string.\n");
         }
     }
 }

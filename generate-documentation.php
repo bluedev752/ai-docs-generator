@@ -56,6 +56,9 @@ function handle_step_failure(Throwable $e): bool {
 }
 
 function generate_documentation(string $mdFilename, string &$model): void {
+
+    $relevantFilesHash = calculate_relevant_files_hash($mdFilename); // Will be saved in history on success
+
     $startTime = microtime(true);
     ai_start_conversation();
 
@@ -110,6 +113,9 @@ function generate_documentation(string $mdFilename, string &$model): void {
         die("Error: Failed to write output file: $outputFile\n");
     }
 
+    // Save sources hash in history
+    upsert_history_entry($mdFilename, $relevantFilesHash);
+
     echo "\n" . success("✓ Documentation successfully generated!") . "\n";
     echo dim("Saved to: $outputFile") . "\n";
     echo "Total characters: " . strlen($finalContent) . "\n";
@@ -128,7 +134,14 @@ if (empty($mdKeys)) {
 
 echo "\n" . color("Available documentation targets:", 'bold') . "\n";
 foreach ($mdKeys as $i => $key) {
-    printf("  %d. %s (%s)\n", $i + 1, MD_FILES[$key]['title'], $key . '.md');
+    $status = get_documentation_status($key);
+    $statusLabel = match($status) {
+        'Unchanged' => dim("[$status]"),
+        'New' => success("[$status]"),
+        'Changed' => warn("[$status]"),
+        default => "[$status]"
+    };
+    printf("  %d. %s %s %s\n", $i + 1, MD_FILES[$key]['title'], info("($key.md)"), $statusLabel);
 }
 
 $selectedFiles = [];

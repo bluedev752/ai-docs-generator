@@ -1,10 +1,13 @@
 Now read this deeply:
 
+# Final task (goal):
+
+- The final goal is to produce a documentation file titled "{{md_title}}".
+- Exclude (do not document) these irrelevant concepts: {{exclude_concepts}}.
+
 # Documentation Style Guide
 
 This document defines the exact standard and process for writing every `.md` file. Every future documentation file must match the defined depth, tone, structure, and quality.
-
-The final goal is to produce a documentation file titled "{{md_title}}".
 
 ## Core Principles
 
