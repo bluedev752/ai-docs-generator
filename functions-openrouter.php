@@ -1,5 +1,18 @@
 <?php
 
+class OpenRouterException extends RuntimeException {
+    public int $httpCode;
+    public array $errorData;
+    public string $rawResponse;
+
+    public function __construct(string $message, int $httpCode, array $errorData, string $rawResponse) {
+        parent::__construct($message);
+        $this->httpCode = $httpCode;
+        $this->errorData = $errorData;
+        $this->rawResponse = $rawResponse;
+    }
+}
+
 /**
  * Send a conversation to the AI and get the next response.
  *
@@ -22,7 +35,14 @@ function openrouter_chat(array $messages, string $model): string {
         'model' => $model,
         'messages' => $messages,
     ]);
-    return $data['choices'][0]['message']['content'] ?? '';
+
+    $content = $data['choices'][0]['message']['content'] ?? '';
+    if ($content === '') {
+        $raw = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        throw new RuntimeException("OpenRouter returned empty content. Full response:\n$raw");
+    }
+
+    return $content;
 }
 
 function openrouter_free_models(): array {
@@ -58,18 +78,27 @@ function openrouter_request(string $endpoint, array $payload = [], string $metho
         $options[CURLOPT_POSTFIELDS] = $json;
     }
     curl_setopt_array($ch, $options);
-    $response = curl_exec($ch);
+    $rawResponse = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError = curl_error($ch);
     if ($curlError) {
-        return ['error' => "OpenRouter cURL error: $curlError"];
+        throw new RuntimeException("OpenRouter cURL error: $curlError");
     }
-    if ($httpCode !== 200 || !$response) {
-        return ['error' => "OpenRouter API error (HTTP $httpCode): $response"];
+
+    if ($httpCode !== 200 || !$rawResponse) {
+        $errorData = json_decode($rawResponse, true) ?: [];
+        throw new OpenRouterException(
+            "OpenRouter API error (HTTP $httpCode)",
+            $httpCode,
+            $errorData,
+            $rawResponse
+        );
     }
-    $result = json_decode($response, true);
+
+    $result = json_decode($rawResponse, true);
     if (!is_array($result)) {
-        ['error' => "Result is not array. Expected array.", 'response' => $response];
+        throw new RuntimeException("OpenRouter returned invalid JSON (HTTP $httpCode). Raw: $rawResponse");
     }
+
     return $result;
 }

@@ -1,6 +1,6 @@
 <?php
 
-function ai_read_relevant_files(string $mdFilename, string $model): ?string {
+function ai_read_relevant_files(string $mdFilename, string $model): string {
     $common_relevant_files = defined('COMMON_RELEVANT_FILES') ? COMMON_RELEVANT_FILES : [];
     $specific_relevant_files = MD_FILES[$mdFilename]['relevant_files'] ?? [];
     $prompt = str_replace(
@@ -14,25 +14,25 @@ function ai_read_relevant_files(string $mdFilename, string $model): ?string {
     return filter_prompt_response_by_success_string($response);
 }
 
-function ai_read_documentation_rules(string $mdFilename, string $model): ?string {
+function ai_read_documentation_rules(string $mdFilename, string $model): string {
     $prompt = get_prompt('read_documentation_rules', $mdFilename);
     $response = ai_run_prompt($prompt, 'read_documentation_rules', $model);
     return filter_prompt_response_by_success_string($response);
 }
 
-function ai_prepare_documentation_task(string $mdFilename, string $model): ?string {
+function ai_prepare_documentation_task(string $mdFilename, string $model): string {
     $prompt = get_prompt('prepare_documentation_task', $mdFilename);
     $response = ai_run_prompt($prompt, 'prepare_documentation_task', $model);
     return filter_prompt_response_by_success_string($response);
 }
 
-function ai_start_documentation_writing(string $mdFilename, string $model): ?string {
+function ai_start_documentation_writing(string $mdFilename, string $model): string {
     $prompt = get_prompt('start_documentation_writing', $mdFilename);
     $response = ai_run_prompt($prompt, 'start_documentation_writing', $model);
     return filter_prompt_response_by_lines($response, $mdFilename);
 }
 
-function ai_review_created_documentation(string $mdFilename, string $model): ?string {
+function ai_review_created_documentation(string $mdFilename, string $model): string {
     $prompt = get_prompt('review_created_documentation', $mdFilename);
     $response = ai_run_prompt($prompt, 'review_created_documentation', $model);
     return filter_prompt_response_by_lines($response, $mdFilename);
@@ -100,26 +100,24 @@ function build_prompt_include_files_content(array $files): string {
 }
 
 /** Filter response by configured success string */
-function filter_prompt_response_by_success_string(string $response): ?string {
+function filter_prompt_response_by_success_string(string $response): string {
     if (!str_contains($response, PROMPT_SUCCESS_STRING)) {
-        echo "Response does not contain success string. Response: $response\n";
-        return null; // Response does not contain success string
+        throw new RuntimeException("Empty or invalid response (missing success string). Raw response: $response");
     }
-    return $response; // Success contains success string
+    return $response;
 }
 
 /** Filter response by configured min lines count */
-function filter_prompt_response_by_lines(string $response, string $mdFilename): ?string {
+function filter_prompt_response_by_lines(string $response, string $mdFilename): string {
     $min = intval(MD_FILES[$mdFilename]['min_lines'] ?? 0);
     if ($min < 1) {
-        return $response; // Minimum not configured
+        return $response;
     }
     $lines = substr_count($response, "\n") + 1;
     if ($lines < $min) {
-        echo "Response for $mdFilename does not contain at least $min lines (contains $lines):\n$response\n";
-        return null; // Lines did not reach minimum
+        throw new RuntimeException("Response too short for $mdFilename (got $lines lines, need $min). Raw: $response");
     }
-    return $response; // Minimum passed
+    return $response;
 }
 
 function get_prompt_version(): string {

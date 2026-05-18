@@ -39,28 +39,19 @@ function select_model(): string {
     return $model;
 }
 
-function handle_step_failure(string $message, string &$model): bool {
-    $lower = strtolower($message);
-
-    // Authentication / API key failure → fatal, no retry
-    // if (str_contains($lower, 'authentication') ||
-    //     str_contains($lower, 'api key') ||
-    //     str_contains($lower, 'unauthorized') ||
-    //     str_contains($lower, 'invalid key')) {
-    //     die("\nFatal: Authentication failed. Check your OPENROUTER_API_KEY and try again.\n");
-    // }
-
-    // Rate limit with explicit wait time
-    // if (preg_match('/rate.?limit|too many requests/i', $message)) {
-    //     if (preg_match('/(\d+)\s*seconds?/i', $message, $matches)) {
-    //         $wait = (int)$matches[1];
-    //         echo warn("Rate limited by OpenRouter. Waiting {$wait} seconds...") . "\n";
-    //         sleep($wait);
-    //         return true; // proceed to retry prompt after waiting
-    //     }
-    // }
-
-    // Unhandled error → allow normal retry prompt
+function handle_step_failure(Throwable $e): bool {
+    // Rate limit (structured or string)
+    if ($e instanceof OpenRouterException && $e->httpCode === 429) {
+        $reset = intval($e->errorData['error']['metadata']['headers']['X-RateLimit-Reset'] ?? 0);
+        $wait = $reset ? max(0, intval($reset / 1000) - time() + 2) : 0;
+        if ($wait > 0) {
+            echo warn("Rate limited. Waiting {$wait}s...") . "\n";
+            sleep($wait);
+        } else {
+            echo warn("Rate limited. Could not determine reset timestamp. Retry manually.") . "\n";
+        }
+        return true;
+    }
     return true;
 }
 
@@ -69,33 +60,25 @@ function generate_documentation(string $mdFilename, string &$model): void {
     ai_start_conversation();
 
     $results = [];
-
     foreach (PROMPT_STEPS as $function => $label) {
         $attempt = 0;
         $success = false;
-
         while (!$success) {
+
             $attempt++;
             echo "\n" . info("$label") . dim(" (attempt $attempt)") . "\n";
-
             $start = microtime(true);
+
             try {
                 $response = $function($mdFilename, $model);
-
-                if ($response !== null && $response !== '') {
-                    $results[$function] = $response;
-                    $duration = round(microtime(true) - $start, 1);
-                    echo success("✓ Completed successfully.") . dim(" ({$duration}s)") . "\n";
-                    $success = true;
-                } else {
-                    ai_rollback_last_turn();
-                    echo error("✗ Returned empty response.") . "\n";
-                }
+                $results[$function] = $response;
+                $duration = round(microtime(true) - $start, 1);
+                echo success("✓ Completed successfully.") . dim(" ({$duration}s)") . "\n";
+                $success = true;
             } catch (Throwable $e) {
                 ai_rollback_last_turn();
-                $msg = $e->getMessage();
-                echo error("✗ Error: $msg") . "\n";
-                handle_step_failure($msg, $model);
+                echo error("✗ Error: " . $e->getMessage()) . "\n";
+                handle_step_failure($e);
             }
 
             if (!$success) {
@@ -108,6 +91,7 @@ function generate_documentation(string $mdFilename, string &$model): void {
                     die("\nAborted at \"$label\".\n");
                 }
             }
+
         }
     }
 
