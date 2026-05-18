@@ -89,10 +89,8 @@ function build_prompt_include_files_content(array $files): string {
         $base = rtrim(SRC_DIR, '\\/');
         $rel  = ltrim($file, '\\/');
         $fullPath = $base . DIRECTORY_SEPARATOR . $rel;
-        if (file_exists($fullPath)) {
-            $fileContent = file_get_contents($fullPath);
-            $content .= "=== FILE: $file ===\n$fileContent\n\n";
-        }
+        $fileContent = file_get_contents($fullPath);
+        $content .= "=== FILE: $file ===\n$fileContent\n\n";
     }
     return $content;
 }

@@ -2,9 +2,9 @@
 
 function get_relevant_files_modification_time(string $mdFilename): int {
     $latest = 0;
-    foreach (MD_FILES[$mdFilename]['relevant_files'] ?? [] as $file) {
+    foreach (MD_FILES[$mdFilename]['relevant_files'] as $file) {
         $fullPath = rtrim(SRC_DIR, '\\/') . DIRECTORY_SEPARATOR . ltrim($file, '\\/');
-        $mtime = is_file($fullPath) ? filemtime($fullPath) : 0;
+        $mtime = filemtime($fullPath);
         if ($mtime > $latest) {
             $latest = $mtime;
         }
@@ -13,7 +13,7 @@ function get_relevant_files_modification_time(string $mdFilename): int {
 }
 
 function calculate_relevant_files_hash(string $mdFilename): string {
-    $config = MD_FILES[$mdFilename] ?? [];
+    $config = MD_FILES[$mdFilename];
     $timestamp = get_relevant_files_modification_time($mdFilename);
     $data = json_encode([$config, $timestamp]);
     return sprintf('%08x', crc32($data));
