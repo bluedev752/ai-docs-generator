@@ -91,12 +91,12 @@ function generate_documentation(string $mdFilename, string &$model): void {
                     ai_rollback_last_turn();
                     echo error("✗ Returned empty response.") . "\n";
                 }
-        } catch (Throwable $e) {
-            ai_rollback_last_turn();
-            $msg = $e->getMessage();
-            echo error("✗ Error: $msg") . "\n";
-            handle_step_failure($msg, $model);
-        }
+            } catch (Throwable $e) {
+                ai_rollback_last_turn();
+                $msg = $e->getMessage();
+                echo error("✗ Error: $msg") . "\n";
+                handle_step_failure($msg, $model);
+            }
 
             if (!$success) {
                 echo "Options: [r]etry same, [m]odel change + retry, [a]bort: ";
