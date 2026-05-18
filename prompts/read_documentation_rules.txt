@@ -4,6 +4,8 @@ Now read this deeply:
 
 This document defines the exact standard and process for writing every `.md` file. Every future documentation file must match the defined depth, tone, structure, and quality.
 
+The final goal is to produce a documentation file titled "{{md_title}}".
+
 ## Core Principles
 
 - **Single source of truth**: Each documentation file is the definitive, complete reference for its topic. No other file may duplicate its explanatory content.

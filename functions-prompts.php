@@ -38,6 +38,8 @@ function ai_review_created_documentation(string $mdFilename, string $model): ?st
     return filter_prompt_response_by_lines($response, $mdFilename);
 }
 
+/** Helpers */
+
 function ai_start_conversation(): void {
     $GLOBALS['ai_messages'] = [];
 }
@@ -60,10 +62,8 @@ function ai_run_prompt(string $prompt, string $prompt_key, string $model): ?stri
     return $response;
 }
 
-/** Helpers */
-
 /** Applies generic replacements */
-function get_prompt(string $prompt_key, ?string $mdFilename=null): string {
+function get_prompt(string $prompt_key, string $mdFilename): string {
     $path = __DIR__ . "/prompts/{$prompt_key}.txt";
     if (!file_exists($path)) {
         throw new RuntimeException("Prompt not found: $prompt_key");
@@ -120,4 +120,14 @@ function filter_prompt_response_by_lines(string $response, string $mdFilename): 
         return null; // Lines did not reach minimum
     }
     return $response; // Minimum passed
+}
+
+function get_prompt_version(): string {
+    $files = glob(__DIR__ . '/prompts/*.txt');
+    $latest = 0;
+    foreach ($files ?: [] as $f) {
+        $t = @filemtime($f);
+        if ($t > $latest) $latest = $t;
+    }
+    return $latest ? date('Y-m-d H:i:s', $latest) : 'unknown';
 }

@@ -1,26 +1,40 @@
 <?php
 
 // Internal config
+
 const OPENROUTER_BASE_URL   = 'https://openrouter.ai/api';
+
 const PROMPT_SUCCESS_STRING = '✨';
 
+const PROMPT_STEPS = [
+    // Function                       // Action label
+    'ai_read_relevant_files'          => 'Reading relevant source files',
+    'ai_read_documentation_rules'     => 'Reading documentation rules',
+    'ai_prepare_documentation_task'   => 'Preparing documentation task',
+    'ai_start_documentation_writing'  => 'Writing initial documentation',
+    'ai_review_created_documentation' => 'Reviewing and finalizing',
+];
+
 // Load core components
+
 require_once __DIR__ . '/.config.php';
 require_once __DIR__ . '/functions-prompts.php';
 require_once __DIR__ . '/functions-openrouter.php';
 
-// === Config Validation ===
+// Config Validation
+
 function validate_config(): void {
     $required = [
-        'OPENROUTER_API_KEY',
-        'SRC_DIR',
-        'OUT_DIR',
-        'MD_FILES',
+        'OPENROUTER_API_KEY' => 'string',
+        'SRC_DIR' => 'string',
+        'OUT_DIR' => 'string',
+        'MD_FILES' => 'array',
+        'COMMON_RELEVANT_FILES' => 'array',
     ];
 
-    foreach ($required as $const) {
+    foreach ($required as $const => $data_type) {
         if (!defined($const)) {
-            die("Configuration error: Constant '$const' is not defined in .config.php\n");
+            die("Configuration error: Constant '$const' is not defined as $data_type in .config.php\n");
         }
     }
 
@@ -39,23 +53,38 @@ function validate_config(): void {
     if (!is_writable(OUT_DIR)) {
         die("Configuration error: OUT_DIR is not writable: " . OUT_DIR . "\n");
     }
+
+    if (!is_array(COMMON_RELEVANT_FILES)) {
+        die("Configuration error: COMMON_RELEVANT_FILES must be an array.\n");
+    }
+
+    if (!is_array(MD_FILES) || empty(MD_FILES)) {
+        die("Configuration error: MD_FILES must be a non-empty array.\n");
+    }
+
+    foreach (MD_FILES as $filename => $config) {
+        if (!is_array($config)) {
+            die("Configuration error: MD_FILES['$filename'] must be an array.\n");
+        }
+        if (empty($config['title']) || !is_string($config['title'])) {
+            die("Configuration error: MD_FILES['$filename'] is missing a valid 'title'.\n");
+        }
+        if (!isset($config['relevant_files']) || !is_array($config['relevant_files'])) {
+            die("Configuration error: MD_FILES['$filename'] must have 'relevant_files' as an array.\n");
+        }
+        if (isset($config['min_lines']) && (!is_int($config['min_lines']) || $config['min_lines'] < 0)) {
+            die("Configuration error: MD_FILES['$filename']['min_lines'] must be a non-negative integer.\n");
+        }
+    }
 }
 
 validate_config();
 
 // === CLI Color Helpers ===
 const COLORS = [
-    'reset'   => "\033[0m",
-    'bold'    => "\033[1m",
-    'dim'     => "\033[2m",
-    'green'   => "\033[32m",
-    'yellow'  => "\033[33m",
-    'red'     => "\033[31m",
-    'blue'    => "\033[34m",
-    'cyan'    => "\033[36m",
-    'magenta' => "\033[35m",
-    'gray'    => "\033[90m",
-    'white'   => "\033[97m",
+    'reset' => "\033[0m",    'bold'    => "\033[1m",    'dim'  => "\033[2m",
+    'green' => "\033[32m",   'yellow'  => "\033[33m",   'red'  => "\033[31m",   'blue'  => "\033[34m",
+    'cyan'  => "\033[36m",   'magenta' => "\033[35m",   'gray' => "\033[90m",   'white' => "\033[97m",
 ];
 
 function color(string $text, string $color = 'reset'): string {
