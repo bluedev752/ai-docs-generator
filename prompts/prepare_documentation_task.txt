@@ -20,6 +20,11 @@ Do not write the file yet.
 
 Spend substantial effort preparing for highly accurate, deeply useful, professional documentation fully aligned with the documentation style guide.
 
-All subfeatures, subflows, edge cases, operational implications, and subconcepts must be included and explained clearly.
+The files provided as relevant files are not equally relevant. Some contain only supplementary context for truly relevant parts.
+Focus exclusively on features, concepts, and responsibilities that are explicitly tied to and belong in the md file to be generated.
+Ignore and do not document anything that does not belong to this file, even if present in the shared files.
+The goal is a focused, non-polluted document that serves as the single source of truth for its exact topic/feature/concept.
+
+Related subfeatures, subflows, edge cases, operational implications, and subconcepts must be included/explained.
 
 When you are fully prepared, respond with a single "{{success_string}}".

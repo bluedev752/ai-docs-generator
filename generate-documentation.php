@@ -9,6 +9,10 @@ function select_model(): string {
     echo info("Fetching available free models...") . "\n";
     $freeModels = openrouter_free_models();
 
+    if (isset($freeModels['error'])) {
+        die("Error fetching free models list: {$freeModels['error']}\n");
+    }
+
     if (empty($freeModels)) {
         die("Error: No free models available from OpenRouter.\n");
     }
@@ -63,7 +67,7 @@ while ($mdFilename === null) {
 
 echo success("Selected: $mdFilename") . "\n";
 
-// Step 3: Run documentation pipeline with robust retry
+// Step 3: Run documentation pipeline (manual retry control)
 ai_start_conversation();
 
 $steps = [
@@ -75,22 +79,23 @@ $steps = [
 ];
 
 $results = [];
-$maxRetries = 3;
 
 foreach ($steps as $function => $label) {
     $attempt = 0;
     $success = false;
 
-    while (!$success && $attempt < $maxRetries) {
+    while (!$success) {
         $attempt++;
-        echo "\n" . info("$label") . dim(" (attempt $attempt/$maxRetries)") . "\n";
+        echo "\n" . info("$label") . dim(" (attempt $attempt)") . "\n";
 
+        $start = microtime(true);
         try {
             $response = $function($mdFilename, $model);
 
             if ($response !== null && $response !== '') {
                 $results[$function] = $response;
-                echo success("✓ Completed successfully.") . "\n";
+                $duration = round(microtime(true) - $start, 1);
+                echo success("✓ Completed successfully.") . dim(" ({$duration}s)") . "\n";
                 $success = true;
             } else {
                 ai_rollback_last_turn();
@@ -101,20 +106,16 @@ foreach ($steps as $function => $label) {
             echo error("✗ Error: " . $e->getMessage()) . "\n";
         }
 
-        if (!$success && $attempt < $maxRetries) {
+        if (!$success) {
             echo "Options: [r]etry same, [m]odel change + retry, [a]bort: ";
             $answer = strtolower(trim(fgets(STDIN)));
             if ($answer === 'm') {
                 $model = select_model();
                 $attempt = 0;
             } elseif ($answer !== 'r') {
-                break;
+                die("\nAborted at \"$label\".\n");
             }
         }
-    }
-
-    if (!$success) {
-        die("\nFatal: Failed to complete \"$label\" after $maxRetries attempts.\n");
     }
 }
 
@@ -124,6 +125,8 @@ $finalContent = $results['ai_review_created_documentation'] ?? $results['ai_star
 if ($finalContent === null || strlen($finalContent) < 100) {
     die("Error: Final documentation content is too short or missing.\n");
 }
+
+$finalContent .= "\n\n---\n*Generated with `$model` on " . date('Y-m-d') . "*\n";
 
 $outputFile = OUT_DIR . DIRECTORY_SEPARATOR . $mdFilename . '.md';
 

@@ -2,29 +2,19 @@ Now read this deeply:
 
 # Documentation Style Guide
 
-This document defines the exact standard and process for writing every `.md` file. Every future documentation file must match the defined depth, tone, structure, clarity, and quality.
+This document defines the exact standard and process for writing every `.md` file. Every future documentation file must match the defined depth, tone, structure, and quality.
 
 ## Core Principles
 
 - **Single source of truth**: Each documentation file is the definitive, complete reference for its topic. No other file may duplicate its explanatory content.
-
 - **Zen, minimal, clean, elegant**: Use precise language. Eliminate redundancy, repetition, filler, and unnecessary words. Every sentence must add unique value.
-
-- **Thorough and honest**: Document every concept, flow, trigger, state transition, edge case, quirk, invariant, and implication exactly as implemented. Never oversimplify or omit important details.
-
+- **Thorough and honest**: Document every concept, flow, trigger, state transition, edge case, quirk, and implication exactly as implemented. Never oversimplify or omit important details.
 - **Professional tone**: Write for an experienced engineer or project owner who needs to understand the system deeply without reading source code.
-
-- **Human-readable yet technical**: Use clear prose. Avoid code snippets unless essential for understanding. Prefer explaining behavior, intent, and system relationships over reproducing implementation details.
-
-- **Explain systems, not just files**: Documentation must explain how components influence one another, why certain flows exist, what assumptions are relied upon, and how changes propagate through the system.
-
-- **Teach the reader the mental model**: The goal is not only to describe what the code does, but to transfer deep operational understanding to the reader.
+- **Human-readable yet technical**: Use clear prose. Avoid code snippets unless they are essential for understanding. Prefer describing behavior over showing implementation.
 
 ## Required Structure
 
-Every documentation file must contain at least four top-level sections.
-
-Recommended top-level sections (adapt as needed for the topic):
+Every documentation file must contain **at least four** top-level sections. Recommended top-level sections (adapt as needed for the topic):
 
 1. Introduction / Overview
 2. Core Concepts / Key Components
@@ -34,75 +24,50 @@ Recommended top-level sections (adapt as needed for the topic):
 6. Security, Reliability, and Scalability Implications
 7. Important Notes
 
-The structure should feel natural and balanced. Sections should evolve from high-level understanding into progressively deeper operational detail.
+Use formatting when 
 
 ## Content Requirements
 
-- Explain both the **how** and the **why** of every important mechanism.
-- Explain how components interact with and affect one another.
-- Clarify the intent behind architectural decisions when inferable from implementation.
+- Explain the **why** and **how** of every mechanism.
 - Describe all state machines, status values, and transitions with their triggers and outcomes.
-- Document configuration keys, defaults, fallbacks, and the exact behavioral effect of each value.
-- Cover error handling, failure recovery, retries, fallback behavior, and degraded operation modes.
-- Explicitly describe behavior when features are disabled, partially configured, unavailable, or misconfigured.
-- Include operational implications, performance considerations, concurrency concerns, atomicity guarantees, and resource management behavior where relevant.
-- Document lifecycle behavior, initialization flows, cleanup behavior, caching behavior, synchronization behavior, and persistence implications where applicable.
-- Explain not only what happens, but what that means for operators, developers, integrators, or maintainers.
-- Include a dedicated "Important Notes" section capturing non-obvious invariants, gotchas, assumptions, and implementation-sensitive behavior.
-- Surface hidden coupling and implicit dependencies whenever they materially affect behavior.
+- Document configuration keys, their defaults, and the exact effect of each value.
+- Cover error handling, failure recovery, and retry logic.
+- Explicitly state what happens when features are disabled or configuration is missing.
+- Include notes on performance, concurrency, atomicity, and resource management.
+- Add a dedicated "Important Notes" section that captures non-obvious invariants and gotchas.
 - End with a closing statement declaring the file as the single source of truth for its topic.
 
-## Depth Expectations
+## Relevant Files & Content
 
-The documentation must go beyond surface-level narration.
-
-Do not merely describe the order of operations. Explain:
-- why the order matters,
-- what assumptions exist between steps,
-- what guarantees are established,
-- what side effects occur,
-- and how failures or state changes propagate through the system.
-
-The reader should come away understanding:
-- how the system behaves,
-- why it behaves that way,
-- how different parts influence one another,
-- and what consequences emerge from changing behavior or configuration.
-
-Avoid "read-and-report" style documentation.
-
-Instead, produce documentation that demonstrates genuine comprehension of the system.
+Important: Avoid writing details about non-related concepts even if they are found in the relevant files you read.
+Not all features you read are necessarily relevant.
+Relevant files does not mean all contents of these files are relevant; It means the files contain at least a small amount of relevant stuff.
+Some files contain a lot of relevant info, some contain very little.
 
 ## Style Rules
 
-Use `##` for main sections and `###` for subsections only when genuinely required.
+Use `##` for main sections and `###` for subsections, only when genuinely required.
 
-- Use backticks for exact identifiers.
-- Status values and standardized strings should be formatted for readability. For example, `TX Pending` instead of `"tx_pending"` when appropriate.
+- Use backticks for exact identifiers. Status values and other small standard strings should be formatted with backticks for easy reading. Statuses like "tx_pending" should be shown as `TX Pending` for easy reading.
+
 - Never start sections with code or tables.
-- Use bold for key terms only when it meaningfully improves clarity.
-- Prefer dense, high-value prose over fragmented micro-paragraphs.
-- Write in present tense.
+- Use bold for key terms on first mention only when it improves clarity.
+
+- Write in present tense for current behavior.
 - Use active voice.
-- Use bullet lists for enumerations, never for primary explanatory prose.
-- Avoid vague wording such as "basically", "simply", "just", or "somehow".
-- Do not add "TODO", "FIXME", speculation, assumptions without basis, or hypothetical behavior not grounded in implementation.
-- Do not reference line numbers or internal function locations unless part of the public API surface.
+- Use bullet lists for enumerations, never for prose.
+- Do not add "TODO", "FIXME", or speculative content.
+- Do not reference line numbers or specific function implementations unless they are part of the public API surface.
 
 ## Process for Creating New Documentation
 
 1. Read the corresponding source file(s) completely and multiple times.
-2. Read all directly related files including callers, consumers, configuration, tests, integrations, and state definitions.
-3. Build a complete mental model of the feature and its operational behavior.
-4. Map every concept, interaction, dependency, edge case, and failure path.
-5. Write the documentation following this guide exactly.
-6. Review against the source to eliminate inaccuracies, omissions, shallow explanations, or misleading simplifications.
-7. Ensure the document can stand entirely on its own as the authoritative reference for the topic.
-8. Ensure the document does not go into detail about stuff that is off-topic and not its responsibility.
+2. Read all directly related files (callers, configuration, tests, etc.).
+3. Map every concept, flow, and edge case.
+4. Write the documentation following this guide exactly.
+5. Review against the source to eliminate any inaccuracy or omission.
+6. Ensure the file can stand alone as the complete reference for its topic.
 
-
-Every new file must reach or exceed that standard.
-
-This document itself is the single source of truth for documentation style. All future `.md` files must strictly follow the rules above.
+This document itself is the single source of truth for documentation style. All future `.md` files must be written in strict accordance with the rules above.
 
 Respond with a single "{{success_string}}" if you have read and fully understood.

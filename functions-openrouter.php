@@ -62,10 +62,14 @@ function openrouter_request(string $endpoint, array $payload = [], string $metho
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError = curl_error($ch);
     if ($curlError) {
-        throw new RuntimeException("OpenRouter cURL error: $curlError");
+        return ['error' => "OpenRouter cURL error: $curlError"];
     }
     if ($httpCode !== 200 || !$response) {
-        throw new RuntimeException("OpenRouter API error (HTTP $httpCode): $response");
+        return ['error' => "OpenRouter API error (HTTP $httpCode): $response"];
     }
-    return json_decode($response, true);
+    $result = json_decode($response, true);
+    if (!is_array($result)) {
+        ['error' => "Result is not array. Expected array.", 'response' => $response];
+    }
+    return $result;
 }
