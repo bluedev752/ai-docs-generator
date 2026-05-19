@@ -3,23 +3,23 @@
 /** Helpers */
 
 function ai_start_conversation(): void {
-    $GLOBALS['ai_messages'] = [];
+    $GLOBALS['AI_MESSAGES'] = [];
 }
 
 function ai_rollback_last_turn(): void {
-    if (!empty($GLOBALS['ai_messages']) && end($GLOBALS['ai_messages'])['role'] === 'assistant') {
-        array_pop($GLOBALS['ai_messages']);
+    if (!empty($GLOBALS['AI_MESSAGES']) && end($GLOBALS['AI_MESSAGES'])['role'] === 'assistant') {
+        array_pop($GLOBALS['AI_MESSAGES']);
     }
-    if (!empty($GLOBALS['ai_messages']) && end($GLOBALS['ai_messages'])['role'] === 'user') {
-        array_pop($GLOBALS['ai_messages']);
+    if (!empty($GLOBALS['AI_MESSAGES']) && end($GLOBALS['AI_MESSAGES'])['role'] === 'user') {
+        array_pop($GLOBALS['AI_MESSAGES']);
     }
 }
 
-function ai_run_prompt(string $promptFilename, string $mdFilename, string $model): ?string {
+function ai_run_prompt(string $promptFilename, string $mdFilename): ?string {
     $prompt = get_prompt($promptFilename, $mdFilename); // Get prompt text
-    $GLOBALS['ai_messages'][] = ['role' => 'user', 'content' => $prompt]; // Add to history
-    $response = openrouter_chat($GLOBALS['ai_messages'], $model); // Fetch response
-    $GLOBALS['ai_messages'][] = ['role' => 'assistant', 'content' => $response]; // Add to history
+    $GLOBALS['AI_MESSAGES'][] = ['role' => 'user', 'content' => $prompt]; // Add to history
+    $response = openrouter_chat(); // Fetch response
+    $GLOBALS['AI_MESSAGES'][] = ['role' => 'assistant', 'content' => $response]; // Add to history
     // Filter response per configuration
     switch (PROMPTS[$promptFilename]['response_filter'] ?? null) {
         case 'success_string':

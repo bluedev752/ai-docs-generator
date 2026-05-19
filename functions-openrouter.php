@@ -15,33 +15,18 @@ class OpenRouterException extends RuntimeException {
 
 /**
  * Send a conversation to the AI and get the next response.
- *
- * Append the returned assistant message to $messages for subsequent turns.
- *
- * @param  array  $messages  Full conversation history
- * @param  string $model     Model identifier
- * @return string            Assistant message content
- *
- * @example
- *   $messages = [];
- *   $messages[] = ['role' => 'user', 'content' => 'Hello'];
- *   $reply = openrouter_chat($messages, $model);
- *   $messages[] = ['role' => 'assistant', 'content' => $reply];
- *   $messages[] = ['role' => 'user', 'content' => 'How are you?']; // Next turn
- *   $reply2 = openrouter_chat($messages, $model);
+ * @return string Assistant message content
  */
-function openrouter_chat(array $messages, string $model): string {
+function openrouter_chat(): string {
     $data = openrouter_request('/v1/chat/completions', [
-        'model' => $model,
-        'messages' => $messages,
+        'model' => $GLOBALS['MODEL'],
+        'messages' => $GLOBALS['AI_MESSAGES'],
     ]);
-
     $content = $data['choices'][0]['message']['content'] ?? '';
     if ($content === '') {
         $raw = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         throw new RuntimeException("OpenRouter returned empty content. Full response:\n$raw");
     }
-
     return $content;
 }
 

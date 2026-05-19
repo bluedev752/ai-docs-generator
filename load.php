@@ -27,6 +27,10 @@ const COLORS = [
     'cyan'  => "\033[36m",   'magenta' => "\033[35m",   'gray' => "\033[90m",   'white' => "\033[97m",
 ];
 
+// Internal globals
+$GLOBALS['MODEL'] = null;
+$GLOBALS['AI_MESSAGES'] = [];
+
 // Load core components
 require_once __DIR__ . '/functions-prompts.php';
 require_once __DIR__ . '/functions-openrouter.php';

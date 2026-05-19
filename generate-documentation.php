@@ -6,7 +6,6 @@ require __DIR__ . '/load.php';
 echo color("======= AI Docs Generator =======", 'bold') . "\n\n";
 
 function select_model(): string {
-
     if (USE_FREE_MODELS_ONLY) {
         echo info("Fetching available free models...") . "\n";
         $models = openrouter_free_models();
@@ -14,20 +13,16 @@ function select_model(): string {
         echo info("Fetching all available models...") . "\n";
         $models = openrouter_all_models();
     }
-
     if (isset($models['error'])) {
         die("Error fetching models: {$models['error']}\n");
     }
-
     if (empty($models)) {
         die("Error: No models available.\n");
     }
-
     echo "\n" . color("Available models:", 'bold') . "\n";
     foreach ($models as $i => $m) {
         printf("  %d. %s\n", $i + 1, $m);
     }
-
     $model = null;
     while ($model === null) {
         echo "\nSelect model number: ";
@@ -40,7 +35,7 @@ function select_model(): string {
             echo "Invalid selection. Please try again.\n";
         }
     }
-
+    $GLOBALS['MODEL'] = $model;
     echo success("\nSelected model: $model") . "\n";
     return $model;
 }
@@ -61,7 +56,7 @@ function handle_step_failure(Throwable $e): bool {
     return true;
 }
 
-function generate_documentation(string $mdFilename, string &$model): void {
+function generate_documentation(string $mdFilename): void {
 
     $mdHash = calculate_md_hash($mdFilename); // Will be saved in history on success
 
@@ -81,7 +76,7 @@ function generate_documentation(string $mdFilename, string &$model): void {
             $start = microtime(true);
 
             try {
-                $response = ai_run_prompt($promptFilename, $mdFilename, $model);
+                $response = ai_run_prompt($promptFilename, $mdFilename);
                 $results[$promptFilename] = $response;
                 $duration = round(microtime(true) - $start, 1);
                 echo success("✓ Completed successfully.") . dim(" ({$duration}s)") . "\n";
@@ -96,7 +91,7 @@ function generate_documentation(string $mdFilename, string &$model): void {
                 echo "Options: [r]etry same, [m]odel change + retry, [a]bort: ";
                 $answer = strtolower(trim(fgets(STDIN)));
                 if ($answer === 'm') {
-                    $model = select_model();
+                    select_model();
                     $attempt = 0;
                 } elseif ($answer !== 'r') {
                     die("\nAborted at \"$label\".\n");
@@ -113,7 +108,7 @@ function generate_documentation(string $mdFilename, string &$model): void {
         die("Error: Final documentation content is too short or missing.\n");
     }
 
-    $finalContent .= "\n\n---\n*Generated with `$model` on " . date('Y-m-d') . " (prompts v" . get_prompts_version() . ")*\n";
+    $finalContent .= "\n\n---\n*Generated with `{$GLOBALS['MODEL']}` on " . date('Y-m-d') . " (prompts v" . get_prompts_version() . ")*\n";
 
     $outputFile = OUT_DIR . DIRECTORY_SEPARATOR . $mdFilename . '.md';
 
@@ -132,7 +127,7 @@ function generate_documentation(string $mdFilename, string &$model): void {
     echo dim("Total time: {$totalDuration}s") . "\n";
 }
 
-$model = select_model();
+select_model();
 
 // Step 2: Select MD targets (comma-separated numbers allowed)
 $mdKeys = array_keys(MD_FILES);
@@ -174,5 +169,5 @@ echo success("\nSelected: " . implode(', ', array_map(fn($f) => "$f.md", $select
 // Run generation for each selected file
 foreach ($selectedFiles as $mdFilename) {
     echo "\n" . color("===== Generating: $mdFilename.md =====", 'bold') . "\n";
-    generate_documentation($mdFilename, $model);
+    generate_documentation($mdFilename);
 }
