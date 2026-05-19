@@ -1,7 +1,6 @@
 <?php
 
-// Internal config
-
+// Internal constants
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api';
 const PROMPT_STEPS = [
     // Function                       // Action label
@@ -13,17 +12,22 @@ const PROMPT_STEPS = [
 ];
 const PROMPT_SUCCESS_STRING = '✨';
 const HISTORY_FILE = __DIR__ . '/.history.json';
+const COLORS = [
+    'reset' => "\033[0m",    'bold'    => "\033[1m",    'dim'  => "\033[2m",
+    'green' => "\033[32m",   'yellow'  => "\033[33m",   'red'  => "\033[31m",   'blue'  => "\033[34m",
+    'cyan'  => "\033[36m",   'magenta' => "\033[35m",   'gray' => "\033[90m",   'white' => "\033[97m",
+];
 
 // Load core components
 require_once __DIR__ . '/functions-prompts.php';
 require_once __DIR__ . '/functions-openrouter.php';
 require_once __DIR__ . '/functions-history.php';
 
-// Load config
-
+// Load & validate config
 require_once __DIR__ . '/.config.php';
+validate_config();
 
-// Config Validation
+////////////////////////////////////////////////////////////////////////
 
 function validate_config(): void {
     $required = [
@@ -127,15 +131,7 @@ function validate_config(): void {
     }
 }
 
-validate_config();
-
-// === CLI Color Helpers ===
-const COLORS = [
-    'reset' => "\033[0m",    'bold'    => "\033[1m",    'dim'  => "\033[2m",
-    'green' => "\033[32m",   'yellow'  => "\033[33m",   'red'  => "\033[31m",   'blue'  => "\033[34m",
-    'cyan'  => "\033[36m",   'magenta' => "\033[35m",   'gray' => "\033[90m",   'white' => "\033[97m",
-];
-
+// CLI Color Helper
 function color(string $text, string $color = 'reset'): string {
     $code = COLORS[$color] ?? COLORS['reset'];
     return $code . $text . COLORS['reset'];
@@ -143,7 +139,7 @@ function color(string $text, string $color = 'reset'): string {
 
 // Semantic helpers
 function success(string $text): string { return color($text, 'green'); }
-function error(string $text): string   { return color($text, 'red'); }
-function warn(string $text): string    { return color($text, 'yellow'); }
-function info(string $text): string    { return color($text, 'cyan'); }
-function dim(string $text): string     { return color($text, 'dim'); }
+function error(string $text): string { return color($text, 'red'); }
+function warn(string $text): string { return color($text, 'yellow'); }
+function info(string $text): string { return color($text, 'cyan'); }
+function dim(string $text): string { return color($text, 'dim'); }

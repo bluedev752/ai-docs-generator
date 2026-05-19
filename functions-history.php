@@ -12,10 +12,12 @@ function get_relevant_files_modification_time(string $mdFilename): int {
     return $latest;
 }
 
-function calculate_relevant_files_hash(string $mdFilename): string {
-    $config = MD_FILES[$mdFilename];
-    $timestamp = get_relevant_files_modification_time($mdFilename);
-    $data = json_encode([$config, $timestamp]);
+function calculate_md_hash(string $mdFilename): string {
+    $data = json_encode([
+        MD_FILES[$mdFilename], // 1: array The md file config array
+        get_relevant_files_modification_time($mdFilename), // 2: int The relevant files modification time
+        get_prompts_version(), // 3: string The prompts version
+    ]);
     return sprintf('%08x', crc32($data));
 }
 
@@ -31,7 +33,7 @@ function get_documentation_status(string $mdFilename): string {
     }
     $history = json_decode(file_get_contents(HISTORY_FILE), true) ?: [];
     $savedHash = $history[$mdFilename] ?? null;
-    $currentHash = calculate_relevant_files_hash($mdFilename);
+    $currentHash = calculate_md_hash($mdFilename);
     if (!$savedHash) {
         return 'New';
     }

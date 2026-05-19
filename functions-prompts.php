@@ -37,20 +37,18 @@ function ai_start_conversation(): void {
 }
 
 function ai_rollback_last_turn(): void {
-    $messages = &$GLOBALS['ai_messages'];
-    if (!empty($messages) && end($messages)['role'] === 'assistant') {
-        array_pop($messages);
+    if (!empty($GLOBALS['ai_messages']) && end($GLOBALS['ai_messages'])['role'] === 'assistant') {
+        array_pop($GLOBALS['ai_messages']);
     }
-    if (!empty($messages) && end($messages)['role'] === 'user') {
-        array_pop($messages);
+    if (!empty($GLOBALS['ai_messages']) && end($GLOBALS['ai_messages'])['role'] === 'user') {
+        array_pop($GLOBALS['ai_messages']);
     }
 }
 
 function ai_run_prompt(string $prompt, string $prompt_key, string $model): ?string {
-    $messages = &$GLOBALS['ai_messages'];
-    $messages[] = ['role' => 'user', 'content' => $prompt];
-    $response = openrouter_chat($messages, $model);
-    $messages[] = ['role' => 'assistant', 'content' => $response];
+    $GLOBALS['ai_messages'][] = ['role' => 'user', 'content' => $prompt];
+    $response = openrouter_chat($GLOBALS['ai_messages'], $model);
+    $GLOBALS['ai_messages'][] = ['role' => 'assistant', 'content' => $response];
     return $response;
 }
 
@@ -118,7 +116,7 @@ function filter_prompt_response_by_lines(string $response, string $mdFilename): 
     return $response;
 }
 
-function get_prompt_version(): string {
+function get_prompts_version(): string {
     $files = glob(__DIR__ . '/prompts/*.txt');
     $latest = 0;
     foreach ($files ?: [] as $f) {

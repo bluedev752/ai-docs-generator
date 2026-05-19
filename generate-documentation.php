@@ -63,7 +63,7 @@ function handle_step_failure(Throwable $e): bool {
 
 function generate_documentation(string $mdFilename, string &$model): void {
 
-    $relevantFilesHash = calculate_relevant_files_hash($mdFilename); // Will be saved in history on success
+    $mdHash = calculate_md_hash($mdFilename); // Will be saved in history on success
 
     $startTime = microtime(true);
     ai_start_conversation();
@@ -111,7 +111,7 @@ function generate_documentation(string $mdFilename, string &$model): void {
         die("Error: Final documentation content is too short or missing.\n");
     }
 
-    $finalContent .= "\n\n---\n*Generated with `$model` on " . date('Y-m-d') . " (prompts v" . get_prompt_version() . ")*\n";
+    $finalContent .= "\n\n---\n*Generated with `$model` on " . date('Y-m-d') . " (prompts v" . get_prompts_version() . ")*\n";
 
     $outputFile = OUT_DIR . DIRECTORY_SEPARATOR . $mdFilename . '.md';
 
@@ -120,7 +120,7 @@ function generate_documentation(string $mdFilename, string &$model): void {
     }
 
     // Save sources hash in history
-    upsert_history_entry($mdFilename, $relevantFilesHash);
+    upsert_history_entry($mdFilename, $mdHash);
 
     echo "\n" . success("✓ Documentation successfully generated!") . "\n";
     echo dim("Saved to: $outputFile") . "\n";
