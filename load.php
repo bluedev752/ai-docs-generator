@@ -49,25 +49,21 @@ function validate_config(): void {
         'OUT_DIR' => 'string',
         'MD_FILES' => 'array',
     ];
-    $optional = [
-        'COMMON_RELEVANT_FILES' => 'array', // defaults to empty array
-        'USE_FREE_MODELS_ONLY' => 'bool', // defaults to null
-        'SOCKS5_PROXY' => 'string', // defaults to empty string
-    ];
     foreach ($required as $const => $data_type) {
         if (!defined($const)) {
             die("Configuration error: Constant '$const' is not defined as $data_type in .config.php\n");
         }
     }
+
     // Define all optional constants
-    foreach ($optional as $const => $data_type) {
-        if (!defined($const)) {
-            define($const, match($data_type) {
-                'array' => [],
-                'string' => '',
-                default => null
-            });
-        }
+    if (!defined('USE_FREE_MODELS_ONLY')) {
+        define('USE_FREE_MODELS_ONLY', null);
+    }
+    if (!defined('COMMON_RELEVANT_FILES')) {
+        define('COMMON_RELEVANT_FILES', []);
+    }
+    if (!defined('SOCKS5_PROXY')) {
+        define('SOCKS5_PROXY', '');
     }
 
     if (!is_string(OPENROUTER_API_KEY) || !str_starts_with(OPENROUTER_API_KEY, 'sk-or-')) {
