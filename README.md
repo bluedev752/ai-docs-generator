@@ -58,18 +58,17 @@ Each `MD_FILES` entry also supports:
 
 ## Usage
 
+Default: Use `.config.php` in the same directory as the PHP script
 ```bash
 php generate-documentation.php
 ```
 
-or
-
+Or specify config file relative to working directory
 ```bash
 php generate-documentation.php --config .config.php
 ```
 
-or
-
+Or specify config file absolute path
 ```bash
 php generate-documentation.php --config /path/to/.config.php
 ```
