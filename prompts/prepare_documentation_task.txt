@@ -1,8 +1,4 @@
-Your task is to create the file:
-
-{{md_filename}} ({{md_title}})
-
-Before writing, fully internalize:
+Before you start writing, fully internalize:
 - the system architecture,
 - feature intent,
 - operational behavior,

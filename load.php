@@ -5,8 +5,8 @@
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api';
 const PROMPT_STEPS = [
     // Function                       // Action label
-    'ai_read_relevant_files'          => 'Reading relevant source files',
     'ai_read_documentation_rules'     => 'Reading documentation rules',
+    'ai_read_relevant_files'          => 'Reading relevant source files',
     'ai_prepare_documentation_task'   => 'Preparing documentation task',
     'ai_start_documentation_writing'  => 'Writing initial documentation',
     'ai_review_created_documentation' => 'Reviewing and finalizing',
@@ -101,7 +101,7 @@ function validate_config(): void {
         if (empty($config['title']) || !is_string($config['title'])) {
             die("Configuration error: MD_FILES['$filename'] is missing a valid 'title'.\n");
         }
-        if (!isset($config['relevant_files']) || !is_array($config['relevant_files'])) {
+        if (empty($config['relevant_files']) || !is_array($config['relevant_files'])) {
             die("Configuration error: MD_FILES['$filename'] must have 'relevant_files' as an array.\n");
         }
 

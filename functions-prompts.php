@@ -1,15 +1,7 @@
 <?php
 
 function ai_read_relevant_files(string $mdFilename, string $model): string {
-    $common_relevant_files = COMMON_RELEVANT_FILES;
-    $specific_relevant_files = MD_FILES[$mdFilename]['relevant_files'] ?? [];
-    $prompt = str_replace(
-        '{{relevant_files}}',
-        build_prompt_include_files_content(
-            array_merge($common_relevant_files ?: [], $specific_relevant_files ?: [])
-        ),
-        get_prompt('read_relevant_files', $mdFilename)
-    );
+    $prompt = get_prompt('read_relevant_files', $mdFilename);
     $response = ai_run_prompt($prompt, 'read_relevant_files', $model);
     return filter_prompt_response_by_success_string($response);
 }
@@ -80,6 +72,16 @@ function get_prompt(string $prompt_key, string $mdFilename): string {
     $prompt = str_replace('{{md_title}}', MD_FILES[$mdFilename]['title'], $prompt);
     // Replace exclude_concepts if present
     $prompt = str_replace('{{exclude_concepts}}', MD_FILES[$mdFilename]['exclude_concepts'] ?? '(none specified)', $prompt);
+    // Replace relevant files
+    if (str_contains($prompt, '{{relevant_file_list}}') || str_contains($prompt, '{{relevant_files}}')) {
+        $all_relevant_files = array_merge(COMMON_RELEVANT_FILES, MD_FILES[$mdFilename]['relevant_files']);
+        // Replace relevant file list
+        $prompt = str_replace('{{relevant_file_list}}', implode("\n", $all_relevant_files), $prompt);
+        // Replace relevant files content
+        if (str_contains($prompt, '{{relevant_files}}')) {
+            $prompt = str_replace('{{relevant_files}}', build_prompt_include_files_content($all_relevant_files), $prompt);
+        }
+    }
     return $prompt;
 }
 

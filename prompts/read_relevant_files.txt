@@ -1,8 +1,7 @@
-Read the following files thoroughly, carefully, and deeply until you fully understand:
-
-{{relevant_files}}
+Now you will read the relevant source files thoroughly, carefully, and deeply until you fully understand.
 
 Your goal is not merely to read the files, but to understand:
+
 - the architecture,
 - intent,
 - responsibilities,
@@ -12,6 +11,12 @@ Your goal is not merely to read the files, but to understand:
 - invariants,
 - operational implications,
 - and why the system was designed this way.
+
+---- RELEVANT FILES START -----
+
+{{relevant_files}}
+
+---- RELEVANT FILES END -----
 
 Build an internal mental model of the system before continuing.
 

@@ -1,9 +1,36 @@
-Now read this deeply:
+# Final task (goal)
 
-# Final task (goal):
+The final goal is to produce a documentation markdown file content titled "{{md_title}}"
 
-- The final goal is to produce a documentation file titled "{{md_title}}".
-- Exclude (do not document) these irrelevant concepts: {{exclude_concepts}}.
+# Procedure
+
+- First you will read the rules of documentation.
+- Then you will read the relevant source files.
+- Then you will prepare for making the md file content.
+- Then you will execute the task of producing the file content.
+- Then you will review & perfect the produced file content.
+
+# Files that have been chosen as relevant
+
+You will read the complete content of these files, to get deep understanding of the topic to be documented.
+For now, here is a list of these files:
+
+{{relevant_file_list}}
+
+# Concepts/features to include
+
+Generally, try to document the features/concepts/topics mentioned in the title.
+
+Subfeatures of the features to be documented should be documented, unless specified so in the list of excluded concepts.
+In other words, include child topics but avoid including sibling/parent topics and topics that are in the list of excluded concepts.
+
+# Concepts/features to exclude
+
+Non-exhaustive list of irrelevant concepts to be excluded from documenting:
+
+{{exclude_concepts}}
+
+Other features you may find in the relevant files list should be treated as complementary (there to help you understand better the features to be documented) and be excluded.
 
 # Documentation Style Guide
 
@@ -19,7 +46,7 @@ This document defines the exact standard and process for writing every `.md` fil
 
 ## Required Structure
 
-Every documentation file must contain **at least four** top-level sections. Recommended top-level sections (adapt as needed for the topic):
+Every documentation file must contain **at least five** top-level sections. Recommended top-level sections (adapt as needed for the topic):
 
 1. Introduction / Overview
 2. Core Concepts / Key Components
