@@ -60,10 +60,10 @@ function generate_documentation(string $mdFilename): void {
 
     $mdHash = calculate_md_hash($mdFilename); // Will be saved in history on success
 
-    $startTime = microtime(true);
+    $file_start_time = time();
     ai_start_conversation();
 
-    $results = [];
+    $result = null;
     foreach (PROMPTS as $promptFilename => $promptConfig) {
 
         $label = ucwords(str_replace('_', ' ', $promptFilename));
@@ -73,13 +73,12 @@ function generate_documentation(string $mdFilename): void {
 
             $attempt++;
             echo "\n" . info("$label") . dim(" (attempt $attempt)") . "\n";
-            $start = microtime(true);
+            $attempt_start = time();
 
             try {
-                $response = ai_run_prompt($promptFilename, $mdFilename);
-                $results[$promptFilename] = $response;
-                $duration = round(microtime(true) - $start, 1);
-                echo success("✓ Completed successfully.") . dim(" ({$duration}s)") . "\n";
+                $result = ai_run_prompt($promptFilename, $mdFilename);
+                $attempt_duration = time() - $attempt_start;
+                echo success("✓ Completed successfully.") . dim(" ({$attempt_duration}s)") . "\n";
                 $success = true;
             } catch (Throwable $e) {
                 ai_rollback_last_turn();
@@ -102,17 +101,16 @@ function generate_documentation(string $mdFilename): void {
     }
 
     // Save final documentation
-    $finalContent = $results['ai_review_created_documentation'] ?? $results['ai_start_documentation_writing'] ?? null;
 
-    if ($finalContent === null || strlen($finalContent) < 100) {
+    if (!is_string($result) || strlen($result) < 128) {
         die("Error: Final documentation content is too short or missing.\n");
     }
 
-    $finalContent .= "\n\n---\n*Generated with `{$GLOBALS['MODEL']}` on " . date('Y-m-d') . " (prompts v" . get_prompts_version() . ")*\n";
+    $result .= "\n\n---\n*Generated with `{$GLOBALS['MODEL']}` on " . date('Y-m-d') . " (prompts v" . get_prompts_version() . ")*\n";
 
     $outputFile = OUT_DIR . DIRECTORY_SEPARATOR . $mdFilename . '.md';
 
-    if (file_put_contents($outputFile, $finalContent) === false) {
+    if (file_put_contents($outputFile, $result) === false) {
         die("Error: Failed to write output file: $outputFile\n");
     }
 
@@ -121,10 +119,10 @@ function generate_documentation(string $mdFilename): void {
 
     echo "\n" . success("✓ Documentation successfully generated!") . "\n";
     echo dim("Saved to: $outputFile") . "\n";
-    echo "Total characters: " . strlen($finalContent) . "\n";
+    echo "File characters: " . strlen($result) . "\n";
 
-    $totalDuration = round(microtime(true) - $startTime, 1);
-    echo dim("Total time: {$totalDuration}s") . "\n";
+    $file_duration = time() - $file_start_time;
+    echo dim("Generation took $file_duration seconds.") . "\n";
 }
 
 select_model();
