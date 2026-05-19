@@ -1,16 +1,25 @@
 <?php
 
 // Internal constants
-const OPENROUTER_BASE_URL = 'https://openrouter.ai/api';
-const PROMPT_STEPS = [
-    // Function                       // Action label
-    'ai_read_documentation_rules'     => 'Reading documentation rules',
-    'ai_read_relevant_files'          => 'Reading relevant source files',
-    'ai_prepare_documentation_task'   => 'Preparing documentation task',
-    'ai_start_documentation_writing'  => 'Writing initial documentation',
-    'ai_review_created_documentation' => 'Reviewing and finalizing',
+const PROMPTS = [
+    'read_documentation_rules' => [
+        'response_filter' => 'success_string',
+    ],
+    'read_relevant_files' => [
+        'response_filter' => 'success_string',
+    ],
+    'prepare_documentation_task' => [
+        'response_filter' => 'success_string',
+    ],
+    'start_documentation_writing' => [
+        'response_filter' => 'minimum_lines',
+    ],
+    'review_created_documentation' => [
+        'response_filter' => 'minimum_lines',
+    ],
 ];
 const PROMPT_SUCCESS_STRING = '✨';
+const OPENROUTER_BASE_URL = 'https://openrouter.ai/api';
 const HISTORY_FILE = __DIR__ . '/.history.json';
 const COLORS = [
     'reset' => "\033[0m",    'bold'    => "\033[1m",    'dim'  => "\033[2m",

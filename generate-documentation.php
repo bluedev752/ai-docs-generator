@@ -69,7 +69,9 @@ function generate_documentation(string $mdFilename, string &$model): void {
     ai_start_conversation();
 
     $results = [];
-    foreach (PROMPT_STEPS as $function => $label) {
+    foreach (PROMPTS as $promptFilename => $promptConfig) {
+
+        $label = ucwords(str_replace('_', ' ', $promptFilename));
         $attempt = 0;
         $success = false;
         while (!$success) {
@@ -79,8 +81,8 @@ function generate_documentation(string $mdFilename, string &$model): void {
             $start = microtime(true);
 
             try {
-                $response = $function($mdFilename, $model);
-                $results[$function] = $response;
+                $response = ai_run_prompt($promptFilename, $mdFilename, $model);
+                $results[$promptFilename] = $response;
                 $duration = round(microtime(true) - $start, 1);
                 echo success("✓ Completed successfully.") . dim(" ({$duration}s)") . "\n";
                 $success = true;

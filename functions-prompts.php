@@ -1,35 +1,5 @@
 <?php
 
-function ai_read_relevant_files(string $mdFilename, string $model): string {
-    $prompt = get_prompt('read_relevant_files', $mdFilename);
-    $response = ai_run_prompt($prompt, 'read_relevant_files', $model);
-    return filter_prompt_response_by_success_string($response);
-}
-
-function ai_read_documentation_rules(string $mdFilename, string $model): string {
-    $prompt = get_prompt('read_documentation_rules', $mdFilename);
-    $response = ai_run_prompt($prompt, 'read_documentation_rules', $model);
-    return filter_prompt_response_by_success_string($response);
-}
-
-function ai_prepare_documentation_task(string $mdFilename, string $model): string {
-    $prompt = get_prompt('prepare_documentation_task', $mdFilename);
-    $response = ai_run_prompt($prompt, 'prepare_documentation_task', $model);
-    return filter_prompt_response_by_success_string($response);
-}
-
-function ai_start_documentation_writing(string $mdFilename, string $model): string {
-    $prompt = get_prompt('start_documentation_writing', $mdFilename);
-    $response = ai_run_prompt($prompt, 'start_documentation_writing', $model);
-    return filter_prompt_response_by_lines($response, $mdFilename);
-}
-
-function ai_review_created_documentation(string $mdFilename, string $model): string {
-    $prompt = get_prompt('review_created_documentation', $mdFilename);
-    $response = ai_run_prompt($prompt, 'review_created_documentation', $model);
-    return filter_prompt_response_by_lines($response, $mdFilename);
-}
-
 /** Helpers */
 
 function ai_start_conversation(): void {
@@ -45,18 +15,28 @@ function ai_rollback_last_turn(): void {
     }
 }
 
-function ai_run_prompt(string $prompt, string $prompt_key, string $model): ?string {
-    $GLOBALS['ai_messages'][] = ['role' => 'user', 'content' => $prompt];
-    $response = openrouter_chat($GLOBALS['ai_messages'], $model);
-    $GLOBALS['ai_messages'][] = ['role' => 'assistant', 'content' => $response];
-    return $response;
+function ai_run_prompt(string $promptFilename, string $mdFilename, string $model): ?string {
+    $prompt = get_prompt($promptFilename, $mdFilename); // Get prompt text
+    $GLOBALS['ai_messages'][] = ['role' => 'user', 'content' => $prompt]; // Add to history
+    $response = openrouter_chat($GLOBALS['ai_messages'], $model); // Fetch response
+    $GLOBALS['ai_messages'][] = ['role' => 'assistant', 'content' => $response]; // Add to history
+    // Filter response per configuration
+    switch (PROMPTS[$promptFilename]['response_filter'] ?? null) {
+        case 'success_string':
+            return filter_prompt_response_by_success_string($response);
+        case 'minimum_lines':
+            return filter_prompt_response_by_lines($response, $mdFilename);
+        default:
+            error("Unhandled prompt response filter configuration.\n");
+            return null;
+    }
 }
 
 /** Applies generic replacements */
-function get_prompt(string $prompt_key, string $mdFilename): string {
-    $path = __DIR__ . "/prompts/{$prompt_key}.txt";
+function get_prompt(string $promptFilename, string $mdFilename): string {
+    $path = __DIR__ . "/prompts/{$promptFilename}.txt";
     if (!file_exists($path)) {
-        throw new RuntimeException("Prompt not found: $prompt_key");
+        throw new RuntimeException("Prompt not found: $promptFilename");
     }
     $prompt = trim(file_get_contents($path));
     if (!is_string($prompt) || $prompt === '') {
