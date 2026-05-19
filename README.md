@@ -37,20 +37,7 @@ cd ai-docs-generator
 
 ## Configuration
 
-Copy `.config.php.example` to `.config.php` and set your values:
-
-```php
-define('OPENROUTER_API_KEY', 'sk-or-your-key-here');
-define('SRC_DIR', './src');
-define('OUT_DIR', './docs');
-define('MD_FILES', [
-    'readme' => [
-        'title' => 'README',
-        'relevant_files' => ['load.php', 'functions-openrouter.php', 'generate-documentation.php'],
-        'min_lines' => 80,
-    ],
-]);
-```
+Copy [.config.php.example](.config.php.example) to `.config.php` and set your values:
 
 **Required constants**:
 - `OPENROUTER_API_KEY` — your OpenRouter API key (must start with `sk-or-`)
@@ -73,6 +60,18 @@ Each `MD_FILES` entry also supports:
 
 ```bash
 php generate-documentation.php
+```
+
+or
+
+```bash
+php generate-documentation.php --config .config.php
+```
+
+or
+
+```bash
+php generate-documentation.php --config /path/to/.config.php
 ```
 
 The tool prompts you to:
