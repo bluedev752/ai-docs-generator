@@ -37,7 +37,19 @@ require_once __DIR__ . '/functions-openrouter.php';
 require_once __DIR__ . '/functions-history.php';
 
 // Load & validate config
-require_once __DIR__ . '/.config.php';
+$configFile = __DIR__ . '/.config.php';
+if (isset($argv)) {
+    foreach ($argv as $i => $arg) {
+        if (($arg === '-c' || $arg === '--config') && isset($argv[$i + 1])) {
+            $p = $argv[$i + 1];
+            $configFile = (str_starts_with($p, '/') || preg_match('/^[a-zA-Z]:[\\\\/]/', $p))
+                ? $p
+                : getcwd() . DIRECTORY_SEPARATOR . ltrim($p, '\\/');
+            break;
+        }
+    }
+}
+require_once $configFile;
 validate_config();
 
 ////////////////////////////////////////////////////////////////////////
