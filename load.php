@@ -36,19 +36,26 @@ require_once __DIR__ . '/functions-prompts.php';
 require_once __DIR__ . '/functions-openrouter.php';
 require_once __DIR__ . '/functions-history.php';
 
-// Load & validate config
+// Determine config file path
 $configFile = __DIR__ . '/.config.php';
 if (isset($argv)) {
     foreach ($argv as $i => $arg) {
         if (($arg === '-c' || $arg === '--config') && isset($argv[$i + 1])) {
             $p = $argv[$i + 1];
-            $configFile = (str_starts_with($p, '/') || preg_match('/^[a-zA-Z]:[\\\\/]/', $p))
+            $configFile = (str_starts_with($p, '/') || (strlen($p) > 1 && $p[1] === ':'))
                 ? $p
                 : getcwd() . DIRECTORY_SEPARATOR . ltrim($p, '\\/');
             break;
         }
     }
 }
+if (!is_file($configFile)) {
+    die("Could not find configuration file at path: $configFile\n");
+}
+$configFile = realpath($configFile);
+echo dim("Config file: $configFile\n");
+
+// Load & validate config file
 require_once $configFile;
 validate_config();
 
@@ -76,6 +83,9 @@ function validate_config(): void {
     }
     if (!defined('SOCKS5_PROXY')) {
         define('SOCKS5_PROXY', '');
+    }
+    if (!defined('REQUEST_TIMEOUT')) {
+        define('REQUEST_TIMEOUT', 300);
     }
 
     if (!is_string(OPENROUTER_API_KEY) || !str_starts_with(OPENROUTER_API_KEY, 'sk-or-')) {
@@ -142,6 +152,16 @@ function validate_config(): void {
         }
         if (isset($config['exclude_concepts']) && !is_string($config['exclude_concepts'])) {
             die("Configuration error: MD_FILES['$filename']['exclude_concepts'] must be a string.\n");
+        }
+        if (isset($config['high_priority_rules']) && !is_array($config['high_priority_rules'])) {
+            die("Configuration error: MD_FILES['$filename']['high_priority_rules'] must be array.\n");
+        }
+        if (isset($config['high_priority_rules'])) {
+            foreach ($config['high_priority_rules'] as $rule_idx => $rule) {
+                if (!is_string($rule)) {
+                    die("Configuration error: MD_FILES['$filename']['high_priority_rules'][$rule_idx] must be a string.\n");
+                }
+            }
         }
     }
     // SOCKS5_PROXY validation (optional)

@@ -11,18 +11,22 @@ const OPENROUTER_API_KEY = 'sk-or-v1-YOUR_API_KEY_HERE';
 const SRC_DIR = '/path/to/your/source/project'; // Root of the project you want to document
 const OUT_DIR = '/path/to/output/directory';    // Where generated .md files will be saved
 
-// Optional: Hide paid models
-const USE_FREE_MODELS_ONLY = true; // Default is false
+// Optional: Hide paid models (default is false)
+// const USE_FREE_MODELS_ONLY = true;
 
 // Optional: SOCKS5 proxy
 // const SOCKS5_PROXY = '127.0.0.1:9050';
 
+// Optional: Request timeout in seconds (default 300 = 5 minutes)
+// const REQUEST_TIMEOUT = 300;
+
 // Optional: Files that are relevant to all documentation targets
 // Note: These are excluded from hash calculation
-const COMMON_RELEVANT_FILES = [
-    'src/core.php',
-    'src/helpers.php',
-];
+// const COMMON_RELEVANT_FILES = [
+//     'README.md',
+//     'src/core.php',
+//     'src/helpers.php',
+// ];
 
 // Define the Markdown files that can be generated
 const MD_FILES = [
@@ -40,6 +44,9 @@ const MD_FILES = [
 
         // Optional: Concepts that should NOT be documented for this target
         // 'exclude_concepts' => 'Internal helpers, legacy fallback logic',
+
+        // Optional: High-priority rules specific to this documentation target
+        // 'high_priority_rules' => ['Always emphasize X', 'Never use Y'],
 
         // Optional: Minimum number of lines required in the generated documentation
         'min_lines' => 50,

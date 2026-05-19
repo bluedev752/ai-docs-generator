@@ -58,6 +58,7 @@ function openrouter_request(string $endpoint, array $payload = [], string $metho
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_TIMEOUT => REQUEST_TIMEOUT,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . OPENROUTER_API_KEY,
             'Content-Type: application/json',

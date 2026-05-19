@@ -32,6 +32,12 @@ Non-exhaustive list of irrelevant concepts to be excluded from documenting:
 
 Other features you may find in the relevant files list should be treated as complementary (there to help you understand better the features to be documented) and be excluded.
 
+# High-priority rules
+
+Here are defined the high-priority rules, which should cancel any other conflicting rule:
+
+{{high_priority_rules}}
+
 # Documentation Style Guide
 
 This document defines the exact standard and process for writing every `.md` file. Every future documentation file must match the defined depth, tone, structure, and quality.

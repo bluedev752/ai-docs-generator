@@ -48,8 +48,11 @@ function get_prompt(string $promptFilename, string $mdFilename): string {
     $prompt = str_replace('{{md_filename}}', $mdFilename, $prompt);
     // Replace md title
     $prompt = str_replace('{{md_title}}', MD_FILES[$mdFilename]['title'], $prompt);
-    // Replace exclude_concepts if present
+    // Replace excluded concepts if present
     $prompt = str_replace('{{exclude_concepts}}', MD_FILES[$mdFilename]['exclude_concepts'] ?? '(none specified)', $prompt);
+    // Replace high priority rules if present
+    $high_priority_rules = MD_FILES[$mdFilename]['high_priority_rules'] ?? [];
+    $prompt = str_replace('{{high_priority_rules}}', implode("\n", $high_priority_rules) ?: '(none specified)', $prompt);
     // Replace relevant files
     if (str_contains($prompt, '{{relevant_file_list}}') || str_contains($prompt, '{{relevant_files}}')) {
         $all_relevant_files = array_merge(COMMON_RELEVANT_FILES, MD_FILES[$mdFilename]['relevant_files']);
